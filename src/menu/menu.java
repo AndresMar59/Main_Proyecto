@@ -128,28 +128,24 @@ public class menu {
         //System.out.println(); // ← mejora visual
 
         System.out.println("Registrar nuevo producto");
-        getInfo.nextLine(); // <-- limpiar buffer antes de pedir el nombre
+        //getInfo.nextLine(); // <-- limpiar buffer antes de pedir el nombre
         System.out.println("Nombre: ");
-        p.setNombre(getInfo.nextLine());  // Aqui no sé qué hace
+        String nombre = validacionesDeCampos("texto");
+        p.setNombre(nombre);
         System.out.println("Precio: ");
-        p.setPrecio(getInfo.nextDouble());
-        System.out.println("Costo Unitario: ");
-        p.setCosto_Unitario(getInfo.nextDouble());
+        double  precio = Double.parseDouble(validacionesDeCampos("decimal"));
+        p.setPrecio(precio);
         System.out.println("Cantidad: ");
-        p.setCantidad(getInfo.nextInt());
+        int cantidad = Integer.parseInt(validacionesDeCampos("entero"));
+        p.setCantidad(cantidad);
         System.out.println("Cantidad Minima: ");
-        p.setCantidadMinima(getInfo.nextInt());
-
-        // Limpia el buffer después de los números
-        getInfo.nextLine();
-
+        int cantidadMinima = Integer.parseInt(validacionesDeCampos("entero"));
+        p.setCantidadMinima(cantidadMinima);
+        // Seleccionar categoría (validada dentro del metodo)
         int categoriaSeleccionada = seleccionarCategoria();
-        p.setCategoria_id(categoriaSeleccionada); //Por defecto
-
-        System.out.println("→ Insertando producto con categoria_id = " + p.getCategoria_id());
-
+        p.setCategoria_id(categoriaSeleccionada);
         service.agregarProducto(p);
-        System.out.println("Producto registrado exitosamente.");
+        System.out.println("Producto registrado exitosamente con categoria_id = " + p.getCategoria_id());
 
     }
 
@@ -279,7 +275,7 @@ public class menu {
     }
 
     private int seleccionarCategoria(){
-        int opc = 8; // Por defecto "Componentes"
+        int opc = -1;
         boolean valido = false;
 
         System.out.println("Seleccione una categoría:");
@@ -291,19 +287,26 @@ public class menu {
         System.out.println("6. Impresoras");
         System.out.println("7. Consumibles");
         System.out.println("8. Componentes");
-        System.out.print("Opción: ");
 
-        if (getInfo.hasNextInt()) {
-            opc = getInfo.nextInt();
-            getInfo.nextLine(); // limpiar salto de línea
-            if (opc >= 1 && opc <= 8) {
-                valido = true;
-            } else {
-                System.out.println(" Categoría inválida. Intente nuevamente.");
+
+        while (!valido) {
+            System.out.print("Opción: ");
+
+            String entrada = validacionesDeCampos("entero");
+
+            try {
+                opc = Integer.parseInt(entrada);
+
+                // Solo permite las categorías válidas
+                if (opc >= 1 && opc <= 8) {
+                    valido = true;
+                } else {
+                    System.out.println("Categoría inválida. Debe ser un número entre 1 y 8.");
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Error: debe ingresar un número válido.");
             }
-        } else {
-            System.out.println(" Entrada no válida. Debe ingresar un número.");
-            getInfo.next(); // descarta entrada inválida
         }
 
         System.out.println("Categoría seleccionada ID: " + opc);
@@ -371,6 +374,59 @@ private void registrarMovimiento() {
         System.out.println(" Movimiento registrado correctamente.");
     } else {
         System.out.println(" Error al registrar movimiento.");
-    } } }
+    } } 
 
 
+//Nuevo metodo para no aceptar campos vacios, texto o numeros
+private String validacionesDeCampos(String dato){
+
+        String entrada = "";
+        boolean valido = false;
+
+        while (!valido) {
+            entrada = getInfo.nextLine().trim();
+            if (entrada.isEmpty()) {
+                System.out.println("Todos los campos deben ser llenados");
+                System.out.println("Ingrese el dato: ");
+                continue;
+            }
+
+
+            switch (dato) {
+                case "entero":
+                    if (entrada.matches("\\d+")) {
+                        valido = true;
+                    }  else {
+                        System.out.println("Ingrese solamente numeros");
+                        System.out.println("Cantidad: ");
+
+
+                    }
+                    break;
+                case "decimal":
+                    if (entrada.matches("\\d+(\\.\\d+)?")) {
+                        valido = true;
+                    }   else {
+                        System.out.println("Ingrese solamente numeros");
+                        System.out.println("Precio: ");
+                    }
+                    break;
+                case "texto":
+                    if (entrada.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s%\\-]+")) {
+                        valido = true;
+                    } else {
+                        System.out.println("Error, ingrese la informacion otra vez");
+                        System.out.println("Nombre: ");
+                    }
+                    break;
+                default:
+                    valido = true;
+            }
+        }
+
+        return entrada;
+
+
+    }
+
+}
