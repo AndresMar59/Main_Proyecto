@@ -134,7 +134,10 @@ public class menu {
         p.setNombre(nombre);
         System.out.println("Precio: ");
         double  precio = Double.parseDouble(validacionesDeCampos("decimal"));
-        p.setPrecio(precio);
+        p.setPrecio(precio);//
+        System.out.println("Costo Unitario: ");
+        double  costo = Double.parseDouble(validacionesDeCampos("decimal"));
+        p.setCosto_Unitario(costo);
         System.out.println("Cantidad: ");
         int cantidad = Integer.parseInt(validacionesDeCampos("entero"));
         p.setCantidad(cantidad);
