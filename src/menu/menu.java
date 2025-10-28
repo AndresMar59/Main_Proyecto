@@ -133,10 +133,10 @@ public class menu {
         String nombre = validacionesDeCampos("texto");
         p.setNombre(nombre);
         System.out.println("Precio: ");
-        double  precio = Double.parseDouble(validacionesDeCampos("decimal"));
+        double  precio = Double.parseDouble(validacionesDeCampos("precio"));
         p.setPrecio(precio);//
         System.out.println("Costo Unitario: ");
-        double  costo = Double.parseDouble(validacionesDeCampos("decimal"));
+        double  costo = Double.parseDouble(validacionesDeCampos("costo"));
         p.setCosto_Unitario(costo);
         System.out.println("Cantidad: ");
         int cantidad = Integer.parseInt(validacionesDeCampos("entero"));
@@ -149,6 +149,7 @@ public class menu {
         p.setCategoria_id(categoriaSeleccionada);
         service.agregarProducto(p);
         System.out.println("Producto registrado exitosamente con categoria_id = " + p.getCategoria_id());
+
 
     }
 
@@ -406,14 +407,23 @@ private String validacionesDeCampos(String dato){
 
                     }
                     break;
-                case "decimal":
+                    
+                case "precio":
                     if (entrada.matches("\\d+(\\.\\d+)?")) {
                         valido = true;
-                    }   else {
-                        System.out.println("Ingrese solamente numeros");
-                        System.out.println("Precio: ");
+                    } else {
+                        System.out.println("Error: Ingrese un precio válido:");
                     }
                     break;
+
+                case "costo":
+                    if (entrada.matches("\\d+(\\.\\d+)?")) {
+                        valido = true;
+                    } else {
+                        System.out.println("Error: Ingrese un costo válido:");
+                    }
+                    break;
+
                 case "texto":
                     if (entrada.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s%\\-]+")) {
                         valido = true;
