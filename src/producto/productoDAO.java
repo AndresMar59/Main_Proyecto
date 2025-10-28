@@ -95,22 +95,85 @@ public class productoDAO {
         return p;
     }
 
-    public void actualizarProducto(producto p) {
-        String sql = "UPDATE producto SET nombre = ?, precio = ?,Costo_Unitario = ?, cantidad = ?, cantidad_minima = ?, categoria_id = ? WHERE id = ?";
-        try (Connection conn = conexionBD.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, p.getNombre());
-            pstmt.setDouble(2, p.getPrecio());
-            pstmt.setDouble(2, p.getCosto_Unitario());
-            pstmt.setInt(3, p.getCantidad());
-            pstmt.setInt(4, p.getCantidadMinima());
-            pstmt.setInt(5, p.getCategoria_id());
-            pstmt.setInt(6, p.getId());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Error al actualizar: " + e.getMessage());
+
+    private boolean existeProductoPorId(Connection conn, int id) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM producto WHERE id=?")) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
         }
     }
+
+    private boolean existeCategoria(Connection conn, int categoriaId) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM categoria WHERE id=?")) {
+            ps.setInt(1, categoriaId);
+            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
+        }
+    }
+
+        private List<String> validarParaActualizar(Connection conn, producto p) throws SQLException {
+        List<String> errores = new ArrayList<>();
+
+        if (p == null) {
+            errores.add("Producto nulo.");
+            return errores;
+        }
+        if (p.getId() <= 0) errores.add("ID inválido.");
+        else if (!existeProductoPorId(conn, p.getId())) errores.add("No existe un producto con ID " + p.getId());
+
+        if (p.getNombre() == null || p.getNombre().trim().isEmpty())
+            errores.add("El nombre es obligatorio.");
+        else if (p.getNombre().trim().length() > 150)
+            errores.add("El nombre no puede superar 150 caracteres.");
+
+        if (p.getPrecio() <= 0) errores.add("El precio debe ser mayor a 0.");
+        if (p.getCosto_Unitario() < 0) errores.add("El costo unitario no puede ser negativo.");
+       // if (p.getCantidad() < 0) errores.add("La cantidad no puede ser negativa.");
+        if (p.getCantidadMinima() < 0) errores.add("La cantidad mínima no puede ser negativa.");
+        if (p.getCategoria_id() <= 0) errores.add("El ID de categoría es obligatorio.");
+        else if (!existeCategoria(conn, p.getCategoria_id()))
+            errores.add("La categoría con ID " + p.getCategoria_id() + " no existe.");
+
+        return errores;
+    }
+
+     public List<String> actualizarProductoConValidacion(producto p) {
+        List<String> errores = new ArrayList<>();
+        String sql = "UPDATE producto SET nombre = ?, precio = ?, Costo_Unitario = ?, cantidad_minima = ?, categoria_id = ? WHERE id = ?";
+        try (Connection conn = conexionBD.getConnection()) {
+            if (conn == null) {
+                errores.add("No hay conexión a la base de datos.");
+                return errores;
+            }
+            errores = validarParaActualizar(conn, p);
+            if (!errores.isEmpty()) return errores;
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, p.getNombre().trim());
+                pstmt.setDouble(2, p.getPrecio());
+                pstmt.setDouble(3, p.getCosto_Unitario());
+              //  pstmt.setInt(4, p.getCantidad());
+                pstmt.setInt(4, p.getCantidadMinima());
+                pstmt.setInt(5, p.getCategoria_id());
+                pstmt.setInt(6, p.getId());
+                int filas = pstmt.executeUpdate();
+                if (filas == 0) errores.add("No se actualizó ningún registro (¿ID inexistente?).");
+            }
+        } catch (SQLException e) {
+            errores.add("Error SQL: " + e.getMessage());
+        }
+        return errores;
+    }
+
+
+
+    public void actualizarProducto(producto p) {
+        List<String> errores = actualizarProductoConValidacion(p);
+        if (!errores.isEmpty()) {
+            System.out.println("No se actualizó: " + String.join(" | ", errores));
+        } else {
+            System.out.println("Producto actualizado correctamente.");
+        }
+    }
+
 
     public void eliminarProducto(int id) {
         String sql = "DELETE FROM producto WHERE id = ?";
@@ -194,14 +257,14 @@ public class productoDAO {
 
 
     public List<Object[]> PrecioTotal() {
-    String sql = "SELECT categoria_id, SUM(cantidad) AS total_cantidad, SUM(precio * cantidad) AS valor_total FROM producto GROUP BY categoria_id";
+    String sql = "SELECT p.categoria_id, c.nombre AS categoria_nombre , SUM(p.cantidad) AS total_cantidad, SUM(p.precio * p.cantidad) AS valor_total FROM producto p INNER JOIN categoria c ON p.categoria_id = c.id GROUP BY p.categoria_id, c.nombre ";
     List<Object[]> resultados = new ArrayList<>();
     try (Connection conn = conexionBD.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql);
          ResultSet rs = stmt.executeQuery()) {
        while (rs.next()) {
         resultados.add(new Object[]{
-                rs.getInt("categoria_id"),
+                rs.getString("categoria_nombre"),
                 rs.getInt("total_cantidad"),
                 rs.getDouble("valor_total")
             });
@@ -214,22 +277,24 @@ public class productoDAO {
 
 
     public List<Object[]> AVG_PromedioCategoria() {
-    String sql = "SELECT categoria_id, AVG(Precio - Costo_unitario) as Margen_promedio, SUM(cantidad) AS total_cantidad FROM producto GROUP BY categoria_id";
+    String sql = " SELECT p.categoria_id, c.nombre AS categoria_nombre, AVG(p.Precio - p.Costo_unitario) AS Margen_promedio, SUM(p.cantidad) AS total_cantidad FROM producto p INNER JOIN categoria c ON p.categoria_id = c.id GROUP BY p.categoria_id, c.nombre";
+
     List<Object[]> resultados = new ArrayList<>();
+
     try (Connection conn = conexionBD.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql);
          ResultSet rs = stmt.executeQuery()) {
-       while (rs.next()) {
-        resultados.add(new Object[]{
-                rs.getInt("categoria_id"),
+
+        while (rs.next()) {
+            resultados.add(new Object[]{
+                rs.getString("categoria_nombre"),
                 rs.getInt("total_cantidad"),
                 rs.getDouble("Margen_promedio")
             });
         }
+
     } catch (SQLException e) {
         e.printStackTrace();
     }
-    return resultados;
-}
 
-}
+    return resultados; } }
