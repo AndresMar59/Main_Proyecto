@@ -364,7 +364,7 @@ private void registrarMovimiento() {
         return;
     }
 
-    // 4. Llamar a DAO para registrar el movimiento y actualizar producto
+    // 4. Llamar a DAO para registrar el movimiento y actualizar
     boolean exito = service.registrarMovimiento(idProducto, cantidad, tipo);
 
     if(exito){
