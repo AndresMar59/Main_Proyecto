@@ -7,7 +7,6 @@ CRUD completo.
 Uso de tablas dinámicas.
 Reportes en PDF/Excel (opcional).
 
-
 MENU
 SISTEMA DE GESTIÓN DE INVENTARIO
 ====================
@@ -21,8 +20,9 @@ SISTEMA DE GESTIÓN DE INVENTARIO
 7. Reporte: Inventario agrupado por categoría
 0. Salir
 
+ * */ 
 
- * */
+// TODO ESTE ES UN COMENTARIO PARA TEST DEL 28-10-2025
 
 import inventario.inventario; // Java.util es un paquete que contiene la clase que nos ayuda a ingresar texto directamente en la consola.
 
@@ -32,7 +32,6 @@ import java.util.Scanner; //Se importa de la carpeta producto la clase producto
 import producto.producto;//Se importa de la carpeta producto la clase productoDAO
 import producto.productoDAO;  //esta importacion nos ayuda a que se puedan utilizar metodos como list<producto>, list es una interfaz que permite guardar varios objetos. Esta dentro del paquere java.util.
 import Reportes.reportes; // Esta importación nos ayuda a utilizar los metodos de reporteria que podamos usar
-
 public class menu {
 
     private inventario inventarioService = new inventario(); //Se llama aal intermediario Inventario
@@ -152,9 +151,6 @@ public class menu {
         System.out.println("Producto registrado exitosamente.");
 
     }
-
-
-
     private void obtenerProductos() {
     List<producto> productos = service.obtenerProductos();
 
@@ -181,8 +177,6 @@ public class menu {
         System.out.println("╚════╧════════════════════════════╧════════════╧════════════╧════════════╧════════════╝");
     }
 }
-
-
    private void bajostock() {
     List<producto> productos = service.obtenerProductos();
 
@@ -243,8 +237,6 @@ public class menu {
             System.out.println("Producto no encontrado.");
         }
     }
-
-
     private void actualizarProducto(){
         System.out.println("Actualizar producto.producto");
 
@@ -268,7 +260,6 @@ public class menu {
         System.out.println("Producto actualizado exitosamente.");
 
     }
-
     private void eliminarProducto(){
         System.out.println("Eliminar producto.producto");
         obtenerProductos();
@@ -335,9 +326,6 @@ case 2:
 
     }
 
-    
-
-
 private void registrarMovimiento() {
     System.out.println("Registrar Movimiento de Inventario");
 
@@ -372,5 +360,3 @@ private void registrarMovimiento() {
     } else {
         System.out.println(" Error al registrar movimiento.");
     } } }
-
-
