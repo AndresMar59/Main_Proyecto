@@ -243,8 +243,6 @@ public class menu {
             System.out.println("Producto no encontrado.");
         }
     }
-
-
     private void actualizarProducto(){
         System.out.println("Actualizar producto.producto");
 
@@ -268,7 +266,6 @@ public class menu {
         System.out.println("Producto actualizado exitosamente.");
 
     }
-
     private void eliminarProducto(){
         System.out.println("Eliminar producto.producto");
         obtenerProductos();
@@ -334,10 +331,6 @@ case 2:
     }
 
     }
-
-    
-
-
 private void registrarMovimiento() {
     System.out.println("Registrar Movimiento de Inventario");
 
@@ -357,13 +350,11 @@ private void registrarMovimiento() {
     System.out.println("2. Salida (restar del stock)");
     int tipo = getInfo.nextInt();
     getInfo.nextLine();
-
     // Validar opción
     if(tipo != 1 && tipo != 2){
         System.out.println("Opción inválida");
         return;
     }
-
     // 4. Llamar a DAO para registrar el movimiento y actualizar producto
     boolean exito = service.registrarMovimiento(idProducto, cantidad, tipo);
 
