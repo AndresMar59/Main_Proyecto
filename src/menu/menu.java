@@ -59,17 +59,34 @@ public class menu {
         System.out.println("║ 9. Salir.                                        ║");
         System.out.println("╚══════════════════════════════════════════════════╝");
 
-        //Validacion de que se ingrese la opcion correcta!
-        try {
-            System.out.print("Opcion: "); opcion = getInfo.nextInt();
-            getInfo.nextLine();
-        } catch(java.util.InputMismatchException e) {
-            System.out.println("Error! Debe seleccionar una opcion del menu");
-            System.out.println("──────────────────────────────────────────────────");
-            getInfo.next();
-            opcion = -1;
-            continue;
-        }
+        do {
+            System.out.print("Seleccione una opción: ");
+            String input = getInfo.nextLine().trim();
+
+            if (input.isEmpty()) {
+                System.out.println("Error! Debe seleccionar una opcion del menu");
+                System.out.println("──────────────────────────────────────────────────");
+                continue;                
+            }
+
+                //Validacion de que se ingrese la opcion correcta!
+            try {
+                opcion = Integer.parseInt(input);
+                if (opcion < 1 || opcion > 9) {
+                    System.out.println("Error! Debe seleccionar una opcion del menu");
+                    System.out.println("──────────────────────────────────────────────────");
+                    opcion = -1; // Reiniciar opcion para repetir el bucle
+                    
+                }
+               
+            } catch(NumberFormatException e) {
+                System.out.println("Error! Debe seleccionar una opcion del menu");
+            }
+
+        } while (opcion == -1);
+
+    
+        
             //Paso
         switch(opcion) {
             case 1:
