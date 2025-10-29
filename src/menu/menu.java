@@ -24,7 +24,6 @@ SISTEMA DE GESTIÓN DE INVENTARIO
 
  * */
 
-import inventario.inventario; // Java.util es un paquete que contiene la clase que nos ayuda a ingresar texto directamente en la consola.
 
 import java.util.Comparator;
 import java.util.List; //Se importa de la carpeta inventario la clase inventario
@@ -35,7 +34,6 @@ import Reportes.reportes; // Esta importación nos ayuda a utilizar los metodos 
 
 public class menu {
 
-    private inventario inventarioService = new inventario(); //Se llama aal intermediario Inventario
     private productoDAO service = new productoDAO();  // Se llama al que hace las consulta directamente con mysql
     Scanner getInfo = new Scanner(System.in); //Se llama a la clase de java.util para utilizar el ingreso de texto.
 
@@ -75,15 +73,18 @@ public class menu {
             //Paso
         switch(opcion) {
             case 1:
-                //System.out.println ("Registrar producto.producto.");
+                //System.out.println ("Registrar producto");
                 registrarProducto();
                 break;
             case 2:
-                //System.out.println ("Listar productos.");
+                //System.out.println ("Listar productos");
+                System.out.print("");
                 obtenerProductos();
+                System.out.println("Volviendo al menu principal...");
+                System.out.println("──────────────────────────────────────────────────");
                 break;
             case 3:
-                //System.out.println ("Buscar producto.producto.");
+                //System.out.println ("Buscar producto");
                 filtrarProductos();
                 break;
             case 4:
@@ -97,14 +98,13 @@ public class menu {
             case 6:
                 //System.out.println ("Mostrar productos con bajo stock.");
                 //bajostock();
-                System.out.println("╔════════════════════════════════╗");
-                System.out.println("║    Productos con Bajo Stock    ║");
-                System.out.println("╚════════════════════════════════╝");
+                System.out.println(" ");
                 bajostock();  //  Aquí se usa
+                System.out.println("Volviendo al menu principal...");
                 System.out.println("──────────────────────────────────────────────────");
                 break;
             case 7:
-                    System.out.println ("Reportes.");
+                    System.out.println (" ");
                     mostrarReportes();
                     break;
                 case 8:
@@ -124,7 +124,8 @@ public class menu {
     }
 
     private void registrarProducto(){
-        producto p = new producto();
+
+      producto p = new producto();
         //System.out.println(); // ← mejora visual
 
         System.out.println("Registrar nuevo producto");
@@ -133,8 +134,11 @@ public class menu {
         String nombre = validacionesDeCampos("texto");
         p.setNombre(nombre);
         System.out.println("Precio: ");
-        double  precio = Double.parseDouble(validacionesDeCampos("decimal"));
-        p.setPrecio(precio);
+        double  precio = Double.parseDouble(validacionesDeCampos("precio"));
+        p.setPrecio(precio);//
+        System.out.println("Costo Unitario: ");
+        double  costo = Double.parseDouble(validacionesDeCampos("costo"));
+        p.setCosto_Unitario(costo);
         System.out.println("Cantidad: ");
         int cantidad = Integer.parseInt(validacionesDeCampos("entero"));
         p.setCantidad(cantidad);
@@ -147,6 +151,7 @@ public class menu {
         service.agregarProducto(p);
         System.out.println("Producto registrado exitosamente con categoria_id = " + p.getCategoria_id());
 
+
     }
 
 
@@ -158,8 +163,8 @@ public class menu {
     if (productos.isEmpty()) {
         System.out.println("No hay productos registrados.");
     } else {
-        System.out.println("╔══════════════════════════════════════════════════════════════════════════════════════╗");
-        System.out.println("║                               LISTA DE PRODUCTOS                                     ║");
+        System.out.println("╔═════════════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                               LISTA DE PRODUCTOS                                    ║");
         System.out.println("╠════╤════════════════════════════╤════════════╤════════════╤════════════╤════════════╣");
         System.out.printf("║ %-4s │ %-26s │ %-10s │ %-10s │ %-10s │ %-10s ║%n",
                 "ID", "Nombre", "Precio", "Costo Unit.", "Stock", "Mínimo");
@@ -176,97 +181,184 @@ public class menu {
         }
 
         System.out.println("╚════╧════════════════════════════╧════════════╧════════════╧════════════╧════════════╝");
+
+
     }
 }
 
 
-   private void bajostock() {
+private void bajostock() {
     List<producto> productos = service.obtenerProductos();
-
-    // Ordenar productos por cantidad (stock) ascendente
-    productos.sort(Comparator.comparingDouble(producto::getCantidad));
-
     boolean bajoStockfound = false;
 
-    System.out.println("╔══════════════════════════════════════════════════════════════╗");
-    System.out.println("║                  PRODUCTOS CON BAJO STOCK                    ║");
-    System.out.println("╠══════╤════════════════════════════╤════════════╤════════════╣");
-    System.out.printf("║ %-4s │ %-26s │ %-10s │ %-10s ║%n", "ID", "Nombre", "Stock", "Mínimo");
-    System.out.println("╟──────┼────────────────────────────┼────────────┼────────────╢");
+    System.out.println("╔════════════════════════════════════════════════════════════════════════════════════════════════╗");
+    System.out.println("║                               PRODUCTOS CON BAJO STOCK                                         ║");
+    System.out.println("╠══════╤════════════════════════════╤════════════╤════════════╤════════════╤════════════╤════════╣");
+
+    // Encabezado
+    System.out.printf("║ %-4s │ %-26s │ %-10s │ %-10s │ %-10s │ %-10s │ %-6s ║%n",
+                      "ID", "Nombre", "Precio", "Costo", "Stock", "Mínimo", "CatID");
+
+    System.out.println("╟──────┼────────────────────────────┼────────────┼────────────┼────────────┼────────────┼────────╢");
 
     for (producto p : productos) {
         if (p.getCantidad() < p.getCantidadMinima()) {
-            System.out.printf("║ %-4d │ %-26s │ %-10.2f │ %-10.2f ║%n",
-                    p.getId(), p.getNombre(), p.getCantidad(), p.getCantidadMinima());
-            bajoStockfound = true;
-        }
-    }
+        System.out.printf("║ %-4d │ %-26s │ %-10.2f │ %-10.2f │ %-10d │ %-10d │ %-6d ║%n",
+                    p.getId(),p.getNombre(),p.getPrecio(),p.getCosto_Unitario(),
+                    p.getCantidad(),
+                    p.getCantidadMinima(),
+                    p.getCategoria_id());
+            bajoStockfound = true; }}
 
     if (!bajoStockfound) {
-        System.out.println("║              No hay productos con bajo stock                 ║");
+    System.out.println("║                       No hay productos con bajo stock                                          ║");
     }
 
-    System.out.println("╚══════╧════════════════════════════╧════════════╧════════════╝");
+    System.out.println("╚══════╧════════════════════════════╧════════════╧════════════╧════════════╧════════════╧════════╝");
 }
 
+
     private void filtrarProductos(){
-        System.out.println("Buscar producto por ID");
+      //  System.out.println("Buscar producto por ID");
         System.out.println("Ingrese el ID del producto.");
 
-        if(!getInfo.hasNextLine()){
-            System.out.println("Error: Debe ingresas un numero.");
-            getInfo.next(); //Limpia la entrada
-            return;
+    int id = -1;
+    boolean entradaValida = false;
+
+        while(!entradaValida){
+     //     System.out.println("Debes ingresas un numero");
+            if (getInfo.hasNextInt()) {
+                id = getInfo.nextInt();
+                getInfo.hasNextLine();
+                entradaValida = true;  
+            } else { System.out.println("Debes ingresar un numero valido");
+            getInfo.nextLine(); // limpiar entrada incorrecta
         }
-
-        int id = getInfo.nextInt();
-        getInfo.nextLine(); //Limpia buffer
-
+    }
         producto encontrado = service.obtenerProductoPorID(id);
 
         if (encontrado != null) {
-            System.out.println("Producto Encontrado");
-            System.out.println("--------------------------------------");
-            System.out.println("ID: " + encontrado.getId());
-            System.out.println("Nombre: " + encontrado.getNombre());
-            System.out.println("Precio: " + encontrado.getPrecio());
-            System.out.println("Costo: " + encontrado.getCosto_Unitario());
-            System.out.println("Cantidad: " + encontrado.getCantidad());
-            System.out.println("Cantidad Minima: " + encontrado.getCantidadMinima());
-            System.out.println("Categoria: " + encontrado.getCategoria_id());
-            System.out.println("--------------------------------------");
+            final String RESET = "\u001B[0m";
+final String CYAN = "\u001B[36m";
+final String GREEN = "\u001B[32m";
+final String YELLOW = "\u001B[33m";
+
+System.out.println(CYAN + "\n══════════════════════════════════════");
+System.out.println("           PRODUCTO ENCONTRADO         ");
+System.out.println("══════════════════════════════════════" + RESET);
+System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "ID", encontrado.getId());
+System.out.printf(GREEN + "%-20s: " + YELLOW + "%s%n", "Nombre", encontrado.getNombre());
+System.out.printf(GREEN + "%-20s: " + YELLOW + "%.2f%n", "Precio", encontrado.getPrecio());
+System.out.printf(GREEN + "%-20s: " + YELLOW + "%.2f%n", "Costo unitario", encontrado.getCosto_Unitario());
+System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Cantidad", encontrado.getCantidad());
+System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Cantidad mínima", encontrado.getCantidadMinima());
+System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Categoría", encontrado.getCategoria_id());
+System.out.println(RESET + CYAN + "══════════════════════════════════════\n"+RESET);
 
         }else {
-            System.out.println("Producto no encontrado.");
+            System.out.println("Producto no encontrado");
+            System.out.println(" ");
+            System.out.println("Volviendo al menu...");
+
+
         }
     }
 
 
-    private void actualizarProducto(){
-        System.out.println("Actualizar producto.producto");
-
+    private void actualizarProducto() {
+        System.out.println("Actualizar producto");
         obtenerProductos();
         System.out.println("Ingrese el ID del producto a actualizar: ");
-        int id = getInfo.nextInt(); 
-        getInfo.nextLine(); //Limpiar buffer
-        producto p = new producto();
-        p.setId(id);
-        System.out.println("Nuevo nombre: ");
-        p.setNombre(getInfo.nextLine());
-        System.out.println("Nuevo precio: ");
-        p.setPrecio(getInfo.nextDouble());
-        System.out.println("Nuevo Costo Unitario: ");
-        p.setCosto_Unitario(getInfo.nextDouble());
-        System.out.println("Nueva cantidad minima: ");
-        p.setCantidadMinima(getInfo.nextInt());
-        p.setCategoria_id(seleccionarCategoria()); //Por defecto
-        service.actualizarProducto(p);
-        System.out.println("Producto actualizado exitosamente.");
 
+        int id = -1;
+        boolean entradaValida = false;
+
+    Scanner getInfo = new Scanner(System.in);
+
+
+        while(!entradaValida){
+     //     System.out.println("Debes ingresas un numero");
+            if (getInfo.hasNextInt()) {
+                id = getInfo.nextInt();
+                getInfo.nextLine();
+                entradaValida = true;  
+            } else { System.out.println("Debes ingresar un numero valido");
+            getInfo.nextLine(); // limpiar entrada incorrecta
+        }
+    }      
+
+       producto encontrado = service.obtenerProductoPorID(id);
+       
+    
+    if (encontrado != null)  {  
+        producto p = new producto();
+     p.setId(id);
+    
+     System.out.println("Nuevo nombre: ");
+     p.setNombre(getInfo.nextLine());
+
+    double precio = 0;
+    while (true) {
+        System.out.print("Nuevo precio: ");
+        if (getInfo.hasNextDouble()) {
+            precio = getInfo.nextDouble();
+            if (precio > 0) break;
+            else System.out.println("El precio debe ser mayor que 0");
+        } else {
+            System.out.println("Debes ingresar un numero entero");
+            getInfo.next(); // limpia el valor invalido
+        }
     }
 
+    double costo = 0;
+    while (true) {
+        System.out.print("Nuevo Costo Unitario: ");
+        if (getInfo.hasNextDouble()) {
+        costo = getInfo.nextDouble();
+          if (costo < 0) {
+            System.out.println("El costo unitario no puede ser negativo");
+            continue; }
+          if (costo >= precio) {
+            System.out.println("El Costo unitario no puede ser mayor que el precio (" + precio +")");
+            continue;
+          }
+            break;
+          }    
+            else {
+            System.out.println("Debes ingresar un numero entero");
+            getInfo.next(); // limpia el valor inválido
+         } }
+
+    int cantidadMinima = 0;
+    while (true) {
+        System.out.print("Nueva cantidad minima: ");
+        if (getInfo.hasNextInt()) {
+    cantidadMinima = getInfo.nextInt();
+        if (cantidadMinima >= 0) break;
+            else System.out.println("La cantidad minima no puede ser negativa");
+        } else {
+            System.out.println("Debes ingresar un numero entero");
+            getInfo.next(); // limpia el valor inválido
+        }
+    }
+
+     p.setPrecio(precio);
+     p.setCosto_Unitario(costo);
+     p.setCantidadMinima(cantidadMinima);
+     p.setCategoria_id(seleccionarCategoria()); // Por defecto
+    
+    service.actualizarProducto(p);
+    System.out.println("Producto actualizado exitosamente");
+    }  
+     else {
+    System.out.println("Producto no encontrado. Saliendo al menú prinicipal");
+    System.out.println("+----------------------------------------------------+"); } }   
+
+
+
+
     private void eliminarProducto(){
-        System.out.println("Eliminar producto.producto");
+        System.out.println("Eliminar producto");
         obtenerProductos();
         System.out.println("Ingrese el ID del producto.producto a eliminar: ");
         int id = getInfo.nextInt(); getInfo.nextLine(); //Limpiar buffer
@@ -313,8 +405,8 @@ public class menu {
     }
 
 
-    //Validacion de campo vacio
-    private String validacionesDeCampos(String dato){
+    //Nuevo metodo para no aceptar campos vacios, texto o numeros
+private String validacionesDeCampos(String dato){
 
         String entrada = "";
         boolean valido = false;
@@ -326,9 +418,10 @@ public class menu {
                 System.out.println("Ingrese el dato: ");
                 continue;
             }
+
             switch (dato) {
                 case "entero":
-                    if (entrada.matches("\\d+") || entrada.isEmpty()) {
+                    if (entrada.matches("\\d+")) {
                         valido = true;
                     }  else {
                         System.out.println("Ingrese solamente numeros");
@@ -337,16 +430,25 @@ public class menu {
 
                     }
                     break;
-                case "decimal":
-                    if (entrada.matches("\\d+(\\.\\d+)?")  || entrada.isEmpty() ) {
+                    
+                case "precio":
+                    if (entrada.matches("\\d+(\\.\\d+)?")) {
                         valido = true;
-                    }   else {
-                        System.out.println("Ingrese solamente numeros");
-                        System.out.println("Precio: ");
+                    } else {
+                        System.out.println("Error: Ingrese un precio válido:");
                     }
                     break;
+
+                    case "costo":
+                    if (entrada.matches("\\d+(\\.\\d+)?")) {
+                        valido = true;
+                    } else {
+                        System.out.println("Error: Ingrese un costo válido:");
+                    }
+                    break;
+
                 case "texto":
-                    if (entrada.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s%\\-]+")  || entrada.isEmpty()) {
+                    if (entrada.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s%\\-]+")) {
                         valido = true;
                     } else {
                         System.out.println("Error, ingrese la informacion otra vez");
@@ -358,99 +460,129 @@ public class menu {
             }
         }
 
-        return entrada;
-
-
-    }
-
+        return entrada; }
 
 
     private void mostrarReportes() {
     reportes reportes = new reportes();
     String home = System.getProperty("user.home");
-    System.out.println("Presione enter para seleccionar el tipo de reporte:");
-    getInfo.nextLine();
-    System.out.println("1. Valor total por categoría ");
-    System.out.println("2. Promedio de utilidad por categoria");
-    System.out.println("0. Volver al menú principal");
+    int opc = -1;
 
-    if(!getInfo.hasNextInt()) { System.out.println(" El valor debe ser un número entero");
-     getInfo.nextLine(); // limpiar entrada incorrecta
-        return;}
 
-    int opc = getInfo.nextInt();
-     getInfo.nextLine(); // limpiar buffer
+       
+        System.out.println("╔══════════════════════════════════════╗");
+        System.out.println("║             MENÚ DE REPORTES         ║");
+        System.out.println("╚══════════════════════════════════════╝");
+        System.out.println("1. Valor total por categoría");
+        System.out.println("2. Promedio de utilidad por categoría");
+        System.out.println("0. Volver al menú principal");
 
-    if (opc < 0 || opc > 2) {
-        System.out.println("Opción inválida. Debe ser 0, 1 o 2");
-        return;
-    }
+         while (opc != 0) {
+        System.out.print("Seleccione una opción: ");
+        System.out.println("");
 
-    switch (opc) {
-        case 1:
-    String rutaPrecio = home + "\\Downloads\\Reporte_Precios.pdf";
-    reportes.PrecioTotalCategoria(rutaPrecio);
-    break;
+        if (!getInfo.hasNextInt()) {
+            System.out.println("Debe ingresar un numero entero");
+            System.out.println(" ");
+            getInfo.nextLine(); // limpiar entrada incorrecta
+            continue; // vuelve a mostrar el menú completo
+        } 
 
-case 2:
+        opc = getInfo.nextInt();
+        getInfo.nextLine(); // limpiar buffer
+
+        if (opc < 0 || opc > 2) {
+            System.out.println("Opción inválida. Debe ser 0, 1 o 2");
+            System.out.println(" ");
+            continue; // vuelve al menú
+        }
+
+         switch (opc) {
+            case 1 -> {System.out.println(" "); String rutaPrecio = home + "\\Downloads\\Reporte_Precios.pdf";
+            reportes.PrecioTotalCategoria(rutaPrecio);
+            }
+            case 2 ->{ System.out.println(" ");
     String rutaUtilidad = home + "\\Downloads\\Reporte_Utilidad.pdf";
-    reportes.AVG_Utilidad(rutaUtilidad);
-    break;
-        default:
+    reportes.AVG_Utilidad(rutaUtilidad);}
+            case 0 -> {
+            System.out.println(" ");    
             System.out.println("Volviendo al menú principal...");
-    }
-
-    }
-
-    
-
+            System.out.println(" "); break;
+            }} }
+}
 
 private void registrarMovimiento() {
     obtenerProductos();
     System.out.println("Presione enter para registrar Movimiento de Inventario");
     getInfo.nextLine(); //Limpiar buffer
-    System.out.print("Ingrese el ID del producto: ");
-    if (!getInfo.hasNextInt()) { System.out.println("El ID del producto debe ser un numero entero");
-    getInfo.nextLine(); // limpiar entrada incorrecta
-    return;}
-    int idP= getInfo.nextInt();
-    getInfo.nextLine(); // limpiar buffer
+    int idP = -1;
+    int cantidad = -1;
+    int tipo = -1;
+    boolean si = false;
 
-    if (idP <= 0) { System.out.println("El ID del producto debe ser mayor que cero");
-        return;}
+       while (!si) {
+        while (true) {
+         System.out.print("Ingrese el ID del producto: ");
+            if (!getInfo.hasNextInt()) {System.out.println("El ID del producto debe ser un numero entero"); System.out.println(" ");
+                getInfo.nextLine(); // limpiar entrada incorrecta
+                continue;
+            }
 
-    // Cantidad
-    System.out.print("Ingrese la cantidad: ");
-    if (!getInfo.hasNextInt()) {System.out.println("La cantidad debe ser un número entero");
-        getInfo.nextLine();
-        return;}
-    int cantidad = getInfo.nextInt();
-    getInfo.nextLine();
-    if (cantidad <= 0) {
-        System.out.println("La cantidad debe ser mayor que cero");
-        return;}
-    // Tipo movimiento
-    System.out.println("Seleccione tipo de movimiento:");
-    System.out.println("1. Entrada (sumar al stock)");
-    System.out.println("2. Salida (resta del stock)");
+            idP = getInfo.nextInt();
+            getInfo.nextLine(); // limpiar buffer
 
-    if (!getInfo.hasNextInt()) {
-        System.out.println("Debe selecionar un numero entre 1-2");
-        getInfo.nextLine();
-        return;}
-    int tipo = getInfo.nextInt();
-    getInfo.nextLine();
-    if (tipo != 1 && tipo != 2) {
-             System.out.println("Opción inválida. Debe seleccionar 1 o 2");
-        return;}
-    // Llamar al servicio
-    boolean exito = service.registrarMovimiento(idP, cantidad, tipo);
+            if (idP <= 0) {System.out.println("El ID debe ser mayor que cero"); System.out.println(" ");
+                continue; }
 
-    if (exito) {
-        System.out.println("Movimiento registrado exitosamente");
+             producto encontrado = service.obtenerProductoPorID(idP);
+            if (encontrado == null) {
+            System.out.println("Producto con ID " + idP + " no encontrado. Vuelve a intentar"); System.out.println(" ");
+            continue;
+            }
+            break;
+            }  // salida del bucle si todo es válido 
+            
+    
+        while (true) {
+            System.out.print("Ingrese la cantidad: ");
+            if (!getInfo.hasNextInt()) {System.out.println("La cantidad debe ser un numero entero"); System.out.println(" ");
+                getInfo.nextLine();
+                continue;}
+
+            cantidad = getInfo.nextInt();
+            getInfo.nextLine();
+            if (cantidad <= 0) {
+                System.out.println("La cantidad debe ser mayor que cero"); System.out.println(" ");
+                continue;}
+            break;
+        }
+
+        // movimiento 
+        while (true) {
+            System.out.println("Seleccione tipo de movimiento");
+            System.out.println("1. Entrada (sumar al stock)");
+            System.out.println("2. Salida (restar del stock)");
+            System.out.print("Opción: ");
+          if (!getInfo.hasNextInt()) {
+                System.out.println("Debe ingresar un número entre 1 y 2"); System.out.println(" ");
+            getInfo.nextLine();
+                continue;}
+
+            tipo = getInfo.nextInt();
+            getInfo.nextLine();
+            if (tipo != 1 && tipo != 2) {
+                System.out.println("Opción invalida, debe ser 1 o 2"); System.out.println(" ");
+                continue;
+            } break;
+        }
+
+        si = service.registrarMovimiento(idP, cantidad, tipo);
+
+    if (si) {
+     System.out.println("Movimiento registrado exitosamente");
+     System.out.println(" ");     
+     System.out.println("\nVolviendo al menú principal...");
     } else {
-        System.out.println(" Error al registrar movimiento");
-    }
-}}
-
-
+   System.out.println("Error al registrar movimiento. Intente nuevamente.\n"); } }}}
+    
+        

@@ -14,7 +14,7 @@ public class producto {
 
     public producto() {}
 
-    public producto(int id, String nombre, double Costo_Unitario, double precio, int cantidad, int cantidad_minima ,
+    public producto(int id, String nombre, double precio, double Costo_Unitario, int cantidad, int cantidad_minima ,
                     int categoria_id) {
         this.id = id;
         this.nombre = nombre;
@@ -47,10 +47,10 @@ public class producto {
     }
 
      public double getCosto_Unitario() {
-        return precio;
+        return Costo_Unitario;
     }
-    public void setCosto_Unitario(double precio) {
-        this.precio = precio;
+    public void setCosto_Unitario(double Costo_Unitario) {
+        this.Costo_Unitario = Costo_Unitario;
     }
     public int getCantidad() {
         return cantidad;

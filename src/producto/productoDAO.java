@@ -66,8 +66,7 @@ public class productoDAO {
         } catch (SQLException e) {
             System.out.println("Error al listar: " + e.getMessage());
         }
-        return producto;
-    }
+         return producto;}
 
     public producto obtenerProductoPorID(int id) {
         producto p = null;
@@ -103,38 +102,7 @@ public class productoDAO {
         }
     }
 
-    private boolean existeCategoria(Connection conn, int categoriaId) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM categoria WHERE id=?")) {
-            ps.setInt(1, categoriaId);
-            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
-        }
-    }
-
-        private List<String> validarParaActualizar(Connection conn, producto p) throws SQLException {
-        List<String> errores = new ArrayList<>();
-
-        if (p == null) {
-            errores.add("Producto nulo.");
-            return errores;
-        }
-        if (p.getId() <= 0) errores.add("ID inválido.");
-        else if (!existeProductoPorId(conn, p.getId())) errores.add("No existe un producto con ID " + p.getId());
-
-        if (p.getNombre() == null || p.getNombre().trim().isEmpty())
-            errores.add("El nombre es obligatorio.");
-        else if (p.getNombre().trim().length() > 150)
-            errores.add("El nombre no puede superar 150 caracteres.");
-
-        if (p.getPrecio() <= 0) errores.add("El precio debe ser mayor a 0.");
-        if (p.getCosto_Unitario() < 0) errores.add("El costo unitario no puede ser negativo.");
-       // if (p.getCantidad() < 0) errores.add("La cantidad no puede ser negativa.");
-        if (p.getCantidadMinima() < 0) errores.add("La cantidad mínima no puede ser negativa.");
-        if (p.getCategoria_id() <= 0) errores.add("El ID de categoría es obligatorio.");
-        else if (!existeCategoria(conn, p.getCategoria_id()))
-            errores.add("La categoría con ID " + p.getCategoria_id() + " no existe.");
-
-        return errores;
-    }
+  
 
      public List<String> actualizarProductoConValidacion(producto p) {
         List<String> errores = new ArrayList<>();
@@ -144,8 +112,8 @@ public class productoDAO {
                 errores.add("No hay conexión a la base de datos.");
                 return errores;
             }
-            errores = validarParaActualizar(conn, p);
-            if (!errores.isEmpty()) return errores;
+          //  errores = validarParaActualizar(conn, p);
+           // if (!errores.isEmpty()) return errores;
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, p.getNombre().trim());
                 pstmt.setDouble(2, p.getPrecio());

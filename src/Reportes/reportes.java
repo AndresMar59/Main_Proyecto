@@ -21,7 +21,7 @@ public class reportes {  // clase reportes
             doc.add(new Paragraph(" ")); // espacio
 
             PdfPTable tabla = new PdfPTable(3);
-            tabla.addCell("ID Categoría");
+            tabla.addCell("Categoría");
             tabla.addCell("Total Cantidad");
             tabla.addCell("Valor Total ($)");
 
@@ -34,7 +34,7 @@ public class reportes {  // clase reportes
             doc.add(tabla);
             doc.close();
 
-            System.out.println("✅ Reporte generado en: " + ruta);
+            System.out.println("Reporte generado en: " + ruta);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public void AVG_Utilidad (String ruta) {
             doc.add(new Paragraph(" ")); // espacio
 
             PdfPTable tabla = new PdfPTable(3);
-            tabla.addCell("ID Categoría");
+            tabla.addCell("Categoría");
             tabla.addCell("Total Cantidad");
             tabla.addCell("Valor AVG Total Utilidad ($)");
 
@@ -66,7 +66,7 @@ public void AVG_Utilidad (String ruta) {
             doc.add(tabla);
             doc.close();
 
-            System.out.println("✅ Reporte generado en: " + ruta);
+            System.out.println("Reporte generado en: " + ruta);
 
         } catch (Exception e) {
             e.printStackTrace();
