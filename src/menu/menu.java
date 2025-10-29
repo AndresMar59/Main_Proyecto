@@ -30,6 +30,7 @@ import java.util.List; //Se importa de la carpeta inventario la clase inventario
 import java.util.Scanner; //Se importa de la carpeta producto la clase producto
 import producto.producto;//Se importa de la carpeta producto la clase productoDAO
 import producto.productoDAO;  //esta importacion nos ayuda a que se puedan utilizar metodos como list<producto>, list es una interfaz que permite guardar varios objetos. Esta dentro del paquere java.util.
+import util.colores;
 import Reportes.reportes; // Esta importación nos ayuda a utilizar los metodos de reporteria que podamos usar
 
 public class menu {
@@ -64,7 +65,7 @@ public class menu {
             String input = getInfo.nextLine().trim();
 
             if (input.isEmpty()) {
-                System.out.println("Error! Debe seleccionar una opcion del menu");
+                System.out.println(colores.RED+"Error! Debe seleccionar una opcion del menu"+colores.RESET);
                 System.out.println("──────────────────────────────────────────────────");
                 continue;                
             }
@@ -73,14 +74,15 @@ public class menu {
             try {
                 opcion = Integer.parseInt(input);
                 if (opcion < 1 || opcion > 9) {
-                    System.out.println("Error! Debe seleccionar una opcion del menu");
+                    System.out.println(colores.RED+"Error! Debe seleccionar una opcion del menu"+colores.RESET);
                     System.out.println("──────────────────────────────────────────────────");
                     opcion = -1; // Reiniciar opcion para repetir el bucle
                     
                 }
                
             } catch(NumberFormatException e) {
-                System.out.println("Error! Debe seleccionar una opcion del menu");
+                System.out.println(colores.RED+"Error! Debe seleccionar una opcion del menu"+colores.RESET);
+                System.out.println("──────────────────────────────────────────────────");
             }
 
         } while (opcion == -1);
@@ -140,7 +142,7 @@ public class menu {
                     break;
                 default:
                     System.out.println("═══════════════════════════════════════════════");
-                    System.out.println ("Error! Debe seleccionar una opcion del menu");
+                    System.out.println (colores.RED+ "Error! Debe seleccionar una opcion del menu" +colores.RESET);
                     System.out.println("═══════════════════════════════════════════════");
             }
 
@@ -171,7 +173,7 @@ public class menu {
             costo = Double.parseDouble(validacionesDeCampos("costo"));
 
             if (costo > precio) {
-                System.out.println("El Costo unitario no puede ser mayor que el precio $ (" + precio +")");
+                System.out.println(colores.YELLOW+ "El Costo unitario no puede ser mayor que el precio $ (" + precio +")" +colores.RESET);
             
             }else{
                 break;
@@ -199,7 +201,7 @@ public class menu {
     List<producto> productos = service.obtenerProductos();
 
     if (productos.isEmpty()) {
-        System.out.println("No hay productos registrados.");
+        System.out.println(colores.YELLOW+"No hay productos registrados."+colores.RESET);
     } else {
         System.out.println("╔═════════════════════════════════════════════════════════════════════════════════════╗");
         System.out.println("║                               LISTA DE PRODUCTOS                                    ║");
@@ -430,11 +432,11 @@ System.out.println(RESET + CYAN + "═══════════════
                 if (opc >= 1 && opc <= 8) {
                     valido = true;
                 } else {
-                    System.out.println("Categoría inválida. Debe ser un número entre 1 y 8.");
+                    System.out.println(colores.RED+ "Categoría inválida. Debe ser un número entre 1 y 8." +colores.RESET);
                 }
 
             } catch (NumberFormatException e) {
-                System.out.println("Error: debe ingresar un número válido.");
+                System.out.println(colores.RED+"Error: debe ingresar un número válido."+colores.RESET);
             }
         }
 
@@ -454,7 +456,7 @@ private String validacionesDeCampos(String dato){
             entrada = getInfo.nextLine().trim();
             if (entrada.isEmpty()) {
                 System.out.println("══════════════════════════════════════════════");
-                System.out.println("**ERROR! Todos los campos deben ser llenados**");
+                System.out.println(colores.RED+"**ERROR! Todos los campos deben ser llenados**"+colores.RESET);
                 System.out.println("══════════════════════════════════════════════");
                 System.out.print("Ingrese el dato: ");     
                 continue;
@@ -466,7 +468,7 @@ private String validacionesDeCampos(String dato){
                         valido = true;
                     }  else {
                         System.out.println("══════════════════════════════════════════════════════════════════════════");
-                        System.out.println("**Dato invalido, solamente ingrese solamente numeros enteros positivos.**");
+                        System.out.println(colores.RED+"**Dato invalido, solamente ingrese solamente numeros enteros positivos.**"+colores.RESET);
                         System.out.println("══════════════════════════════════════════════════════════════════════════");
                         System.out.print("Cantidad: ");
                     }
@@ -477,7 +479,7 @@ private String validacionesDeCampos(String dato){
                         valido = true;
                     } else {
                         System.out.println("══════════════════════════════════════════════════════");
-                        System.out.println("**Dato invalido, debe ingresar cantidades positivas**");
+                        System.out.println(colores.RED+ "**Dato invalido, debe ingresar cantidades positivas**" +colores.RESET);
                         System.out.println("══════════════════════════════════════════════════════");
                         System.out.print("Precio: $");
                     }
@@ -488,7 +490,7 @@ private String validacionesDeCampos(String dato){
                         valido = true;
                     } else {
                         System.out.println("══════════════════════════════════════════════════════");
-                        System.out.println("**Dato invalido, debe ingresar cantidades positivas**");
+                        System.out.println(colores.RED+ "**Dato invalido, debe ingresar cantidades positivas**"+colores.RESET);
                         System.out.println("══════════════════════════════════════════════════════");
                         System.out.print("Costo Unitario: $");
                     }
@@ -499,7 +501,7 @@ private String validacionesDeCampos(String dato){
                         valido = true;
                     } else {
                         System.out.println("═════════════════════════════════════════════════════");
-                        System.out.println("**Dato invalido, solo se permiten letras y numeros**");
+                        System.out.println(colores.RED+ "**Dato invalido, solo se permiten letras y numeros**"+colores.RESET);
                         System.out.println("═════════════════════════════════════════════════════");
                         System.out.print("Nombre: ");
                     }

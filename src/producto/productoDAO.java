@@ -2,6 +2,7 @@ package producto;
 
 import conexionBD.conexionBD;
 
+import util.colores;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,9 +34,9 @@ public class productoDAO {
             int filasAfectadas = pstmt.executeUpdate();
 
             if (filasAfectadas > 0) {
-                System.out.println("Producto registrado exitosamente en la base de datos.");
+                System.out.println(colores.GREEN+ "Producto registrado exitosamente en la base de datos."+colores.RESET);
             } else {
-                System.out.println("No se pudo registrar el producto.");
+                System.out.println(colores.YELLOW+ "No se pudo registrar el producto."+colores.RESET);
             }
 
         } catch (SQLException e) {
