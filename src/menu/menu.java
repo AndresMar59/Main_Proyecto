@@ -92,6 +92,8 @@ public class menu {
             case 1:
                 //System.out.println ("Registrar producto");
                 registrarProducto();
+                System.out.println("Volviendo al menu principal...");
+                System.out.println("──────────────────────────────────────────────────");
                 break;
             case 2:
                 //System.out.println ("Listar productos");
@@ -107,10 +109,14 @@ public class menu {
             case 4:
                 //System.out.println ("Actualizar producto.producto.");
                 actualizarProducto();
+                System.out.println("Volviendo al menu principal...");
+                System.out.println("──────────────────────────────────────────────────");
                 break;
             case 5:
                 //System.out.println ("Eliminar producto.producto.");
                 eliminarProducto();
+                System.out.println("Volviendo al menu principal...");
+                System.out.println("──────────────────────────────────────────────────");
                 break;
             case 6:
                 //System.out.println ("Mostrar productos con bajo stock.");
@@ -129,61 +135,66 @@ public class menu {
                 registrarMovimiento();
                 break;    
                 case 9:
-                    System.out.println ("Salir");
+                    System.out.println ("Gracias por usar el sistema de gestion de inventario. Saliendo...");
                     System.exit(0);
                     break;
                 default:
+                    System.out.println("═══════════════════════════════════════════════");
                     System.out.println ("Error! Debe seleccionar una opcion del menu");
+                    System.out.println("═══════════════════════════════════════════════");
             }
 
         }
 
     }
 
+
+    //Registrar producto - Create
     private void registrarProducto(){
 
       producto p = new producto();
         //System.out.println(); // ← mejora visual
 
-        System.out.println("Registrar nuevo producto");
+        System.out.println("═════════════════════════════════");
+        System.out.println("REGISTRO DE PRODUCTOS");
+        System.out.println("═════════════════════════════════");
         //getInfo.nextLine(); // <-- limpiar buffer antes de pedir el nombre
-        System.out.println("Nombre: ");
+        System.out.print("Nombre: ");
         String nombre = validacionesDeCampos("texto");
         p.setNombre(nombre);
-        System.out.println("Precio: ");
+        System.out.print("Precio: $");
         double  precio = Double.parseDouble(validacionesDeCampos("precio"));
         p.setPrecio(precio);
         double costo;
         while (true) {
-            System.out.println("Costo Unitario: ");
+            System.out.print("Costo Unitario: $");
             costo = Double.parseDouble(validacionesDeCampos("costo"));
 
             if (costo > precio) {
-                System.out.println("El Costo unitario no puede ser mayor que el precio (" + precio +")");
+                System.out.println("El Costo unitario no puede ser mayor que el precio $ (" + precio +")");
             
             }else{
                 break;
             }
         }
         p.setCosto_Unitario(costo);
-        System.out.println("Cantidad: ");
+        System.out.print("Cantidad: ");
         int cantidad = Integer.parseInt(validacionesDeCampos("entero"));
         p.setCantidad(cantidad);
-        System.out.println("Cantidad Minima: ");
+        System.out.print("Cantidad Minima: ");
         int cantidadMinima = Integer.parseInt(validacionesDeCampos("entero"));
         p.setCantidadMinima(cantidadMinima);
         // Seleccionar categoría (validada dentro del metodo)
         int categoriaSeleccionada = seleccionarCategoria();
         p.setCategoria_id(categoriaSeleccionada);
         service.agregarProducto(p);
-        System.out.println("Producto registrado exitosamente con categoria_id = " + p.getCategoria_id());
+        //System.out.println("Producto registrado exitosamente con categoria_id = " + p.getCategoria_id());
 
 
     }
 
 
-
-
+    //Listar productos - Read    
     private void obtenerProductos() {
     List<producto> productos = service.obtenerProductos();
 
@@ -208,8 +219,6 @@ public class menu {
         }
 
         System.out.println("╚════╧════════════════════════════╧════════════╧════════════╧════════════╧════════════╝");
-
-
     }
 }
 
@@ -398,6 +407,7 @@ System.out.println(RESET + CYAN + "═══════════════
         boolean valido = false;
 
         System.out.println("Seleccione una categoría:");
+        System.out.println("-----------------------");
         System.out.println("1. Consolas");
         System.out.println("2. Equipos");
         System.out.println("3. Accesorios");
@@ -406,6 +416,8 @@ System.out.println(RESET + CYAN + "═══════════════
         System.out.println("6. Impresoras");
         System.out.println("7. Consumibles");
         System.out.println("8. Componentes");
+        System.out.println("-----------------------");
+        
         while (!valido) {
             System.out.print("Opción: ");
 
@@ -426,7 +438,7 @@ System.out.println(RESET + CYAN + "═══════════════
             }
         }
 
-        System.out.println("Categoría seleccionada ID: " + opc);
+        //System.out.println("Categoría seleccionada ID: " + opc);
         return opc;
 
     }
@@ -441,8 +453,10 @@ private String validacionesDeCampos(String dato){
         while (!valido) {
             entrada = getInfo.nextLine().trim();
             if (entrada.isEmpty()) {
-                System.out.println("Todos los campos deben ser llenados");
-                System.out.println("Ingrese el dato: ");
+                System.out.println("══════════════════════════════════════════════");
+                System.out.println("**ERROR! Todos los campos deben ser llenados**");
+                System.out.println("══════════════════════════════════════════════");
+                System.out.print("Ingrese el dato: ");     
                 continue;
             }
 
@@ -451,8 +465,10 @@ private String validacionesDeCampos(String dato){
                     if (entrada.matches("\\d+")) {
                         valido = true;
                     }  else {
-                        System.out.println("Ingrese solamente numeros");
-                        System.out.println("Cantidad: ");
+                        System.out.println("══════════════════════════════════════════════════════════════════════════");
+                        System.out.println("**Dato invalido, solamente ingrese solamente numeros enteros positivos.**");
+                        System.out.println("══════════════════════════════════════════════════════════════════════════");
+                        System.out.print("Cantidad: ");
                     }
                     break;
                     
@@ -460,7 +476,10 @@ private String validacionesDeCampos(String dato){
                     if (entrada.matches("\\d+(\\.\\d+)?")) {
                         valido = true;
                     } else {
-                        System.out.println("Error: Ingrese un precio válido:");
+                        System.out.println("══════════════════════════════════════════════════════");
+                        System.out.println("**Dato invalido, debe ingresar cantidades positivas**");
+                        System.out.println("══════════════════════════════════════════════════════");
+                        System.out.print("Precio: $");
                     }
                     break;
 
@@ -468,7 +487,10 @@ private String validacionesDeCampos(String dato){
                     if (entrada.matches("\\d+(\\.\\d+)?")) {
                         valido = true;
                     } else {
-                        System.out.println("Error: Ingrese un costo válido:");
+                        System.out.println("══════════════════════════════════════════════════════");
+                        System.out.println("**Dato invalido, debe ingresar cantidades positivas**");
+                        System.out.println("══════════════════════════════════════════════════════");
+                        System.out.print("Costo Unitario: $");
                     }
                     break;
 
@@ -476,8 +498,10 @@ private String validacionesDeCampos(String dato){
                     if (entrada.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s%\\-]+")) {
                         valido = true;
                     } else {
-                        System.out.println("Error, ingrese la informacion otra vez");
-                        System.out.println("Nombre: ");
+                        System.out.println("═════════════════════════════════════════════════════");
+                        System.out.println("**Dato invalido, solo se permiten letras y numeros**");
+                        System.out.println("═════════════════════════════════════════════════════");
+                        System.out.print("Nombre: ");
                     }
                     break;
                 default:

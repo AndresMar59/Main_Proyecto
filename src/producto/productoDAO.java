@@ -20,7 +20,7 @@ public class productoDAO {
         try (Connection conn = conexionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            System.out.println("➡ Insertando producto.producto con categoria_id = " + p.getCategoria_id()); // 👈 debug line
+            //System.out.println("➡ Insertando producto.producto con categoria_id = " + p.getCategoria_id()); // 👈 debug line
 
             pstmt.setString(1, p.getNombre());
             pstmt.setDouble(2, p.getPrecio());
@@ -35,7 +35,7 @@ public class productoDAO {
             if (filasAfectadas > 0) {
                 System.out.println("Producto registrado exitosamente en la base de datos.");
             } else {
-                System.out.println("No se pudo registrar el producto.producto.");
+                System.out.println("No se pudo registrar el producto.");
             }
 
         } catch (SQLException e) {
