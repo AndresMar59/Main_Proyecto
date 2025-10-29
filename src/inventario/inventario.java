@@ -9,7 +9,13 @@ public class inventario {
 
     private productoDAO productoDAO = new productoDAO();
 
+
+    //Agregando validaciones para que el costo no sea mayor a precio.
     public void agregarProducto(producto p) {
+        if (p.getCosto_Unitario() > p.getPrecio()) {
+            System.out.println("Error: Costo unitario no puede ser mayor al Precio.");
+            return;
+        }
         productoDAO.agregarProducto(p);
     }
 

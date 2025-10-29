@@ -152,9 +152,19 @@ public class menu {
         p.setNombre(nombre);
         System.out.println("Precio: ");
         double  precio = Double.parseDouble(validacionesDeCampos("precio"));
-        p.setPrecio(precio);//
-        System.out.println("Costo Unitario: ");
-        double  costo = Double.parseDouble(validacionesDeCampos("costo"));
+        p.setPrecio(precio);
+        double costo;
+        while (true) {
+            System.out.println("Costo Unitario: ");
+            costo = Double.parseDouble(validacionesDeCampos("costo"));
+
+            if (costo > precio) {
+                System.out.println("El Costo unitario no puede ser mayor que el precio (" + precio +")");
+            
+            }else{
+                break;
+            }
+        }
         p.setCosto_Unitario(costo);
         System.out.println("Cantidad: ");
         int cantidad = Integer.parseInt(validacionesDeCampos("entero"));
@@ -443,8 +453,6 @@ private String validacionesDeCampos(String dato){
                     }  else {
                         System.out.println("Ingrese solamente numeros");
                         System.out.println("Cantidad: ");
-
-
                     }
                     break;
                     
