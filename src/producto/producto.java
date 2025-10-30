@@ -47,10 +47,10 @@ public class producto {
         return id;
     }
     //Se remueve porque no se deberia modificar el ID una vez creado el producto.
-    /*
+    
     public void setId(int id) {  // Quitar lo de set ID. Puede generar problema
         this.id = id;
-    } */
+    }
     public String getNombre() {
         return nombre;
     }
