@@ -318,94 +318,133 @@ public class menu {
         }
     }
 
-
+    //Actualizar producto - Update
     private void actualizarProducto() {
-        System.out.println("Actualizar producto");
+        System.out.println("══════════════════════════════");
+        System.out.println("    ACTUALIZAR PRODUCTOS");
+        System.out.println("══════════════════════════════");
+        
         obtenerProductos();
-        System.out.println("Ingrese el ID del producto a actualizar: ");
+        System.out.print("ID del producto: ");
 
         int id = -1;
         boolean entradaValida = false;
+        String idInput;
 
-    Scanner getInfo = new Scanner(System.in);
+        while (!entradaValida) {
+            idInput = getInfo.nextLine().trim();
+            if (idInput.isEmpty() || !idInput.matches("\\d+")) {
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.println(colores.RED+"**ERROR! El campo ID no puede estar vacio y solo debe llevar numeros.**"+colores.RESET);
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.print("Ingrese el ID nuevamente: ");     
+                continue;
+            }
+            try {
+                id = Integer.parseInt(idInput);
+                entradaValida = true;
+            } catch (NumberFormatException e) {
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.println(colores.RED+"**ERROR! El campo ID solo debe llevar numeros.**"+colores.RESET);
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.print("Ingrese el ID nuevamente: ");     
+            }
+            
+        }
+        
+        producto encontrado = service.obtenerProductoPorID(id);
 
+        //Nombre
+        if (encontrado != null)  {  
+            producto p = new producto();
+            p.setId(id);
+            System.out.print("Nuevo nombre: ");
+            String nombre = validacionesDeCampos("texto"); //Corregido
+            p.setNombre(nombre);
 
-        while(!entradaValida){
-     //     System.out.println("Debes ingresas un numero");
+        //Precio    
+        System.out.print("Nuevo precio: $");
+        double  precio = Double.parseDouble(validacionesDeCampos("precio"));
+        p.setPrecio(precio);
+        
+        /* 
+        double precio = 0;
+        while (true) {
+            System.out.print("Nuevo precio: ");
+            if (getInfo.hasNextDouble()) {
+                precio = getInfo.nextDouble();
+                if (precio > 0) break;
+                else System.out.println("El precio debe ser mayor que 0");
+            } else {
+                System.out.println("Debes ingresar un numero entero");
+                getInfo.next(); // limpia el valor invalido
+            }
+        }*/
+
+        //Costo Unitario
+         double costo;
+        while (true) {
+            System.out.print("Nuevo Costo Unitario: $");
+            costo = Double.parseDouble(validacionesDeCampos("costo"));
+
+            if (costo > precio) {
+                System.out.println("-----------------------------------------------------------------");
+                System.out.println(colores.YELLOW+ "El Costo unitario no puede ser mayor o igual que el precio $(" + precio +")." +colores.RESET);
+                System.out.println("-----------------------------------------------------------------");
+            }else{
+                break;
+            }
+        }
+        p.setCosto_Unitario(costo);
+
+        /*        
+        double costo = 0;
+        while (true) {
+            System.out.print("Nuevo Costo Unitario: ");
+            if (getInfo.hasNextDouble()) {
+            costo = getInfo.nextDouble();
+            if (costo < 0) {
+                System.out.println("El costo unitario no puede ser negativo");
+                continue; }
+            if (costo >= precio) {
+                System.out.println("El Costo unitario no puede ser mayor que el precio (" + precio +")");
+                continue;
+            }
+                break;
+            }    
+                else {
+                System.out.println("Debes ingresar un numero entero");
+                getInfo.next(); // limpia el valor inválido
+            } }*/
+
+        //Cantidad Minima 
+        
+        System.out.print("Nueva Cantidad Minima: ");
+        int cantidadMinima = Integer.parseInt(validacionesDeCampos("entero"));
+        p.setCantidadMinima(cantidadMinima);
+
+        /*int cantidadMinima = 0;
+        while (true) {
+            System.out.print("Nueva cantidad minima: ");
             if (getInfo.hasNextInt()) {
-                id = getInfo.nextInt();
-                getInfo.nextLine();
-                entradaValida = true;  
-            } else { System.out.println("Debes ingresar un numero valido");
-            getInfo.nextLine(); // limpiar entrada incorrecta
-        }
-    }      
+        cantidadMinima = getInfo.nextInt();
+            if (cantidadMinima >= 0) break;
+                else System.out.println("La cantidad minima no puede ser negativa");
+            } else {
+                System.out.println("Debes ingresar un numero entero");
+                getInfo.next(); // limpia el valor inválido
+            }
+        }*/
 
-       producto encontrado = service.obtenerProductoPorID(id);
-       
-    
-    if (encontrado != null)  {  
-        producto p = new producto();
-     p.setId(id);
-    
-     System.out.println("Nuevo nombre: ");
-     p.setNombre(getInfo.nextLine());
-
-    double precio = 0;
-    while (true) {
-        System.out.print("Nuevo precio: ");
-        if (getInfo.hasNextDouble()) {
-            precio = getInfo.nextDouble();
-            if (precio > 0) break;
-            else System.out.println("El precio debe ser mayor que 0");
-        } else {
-            System.out.println("Debes ingresar un numero entero");
-            getInfo.next(); // limpia el valor invalido
-        }
-    }
-
-    double costo = 0;
-    while (true) {
-        System.out.print("Nuevo Costo Unitario: ");
-        if (getInfo.hasNextDouble()) {
-        costo = getInfo.nextDouble();
-          if (costo < 0) {
-            System.out.println("El costo unitario no puede ser negativo");
-            continue; }
-          if (costo >= precio) {
-            System.out.println("El Costo unitario no puede ser mayor que el precio (" + precio +")");
-            continue;
-          }
-            break;
-          }    
-            else {
-            System.out.println("Debes ingresar un numero entero");
-            getInfo.next(); // limpia el valor inválido
-         } }
-
-    int cantidadMinima = 0;
-    while (true) {
-        System.out.print("Nueva cantidad minima: ");
-        if (getInfo.hasNextInt()) {
-    cantidadMinima = getInfo.nextInt();
-        if (cantidadMinima >= 0) break;
-            else System.out.println("La cantidad minima no puede ser negativa");
-        } else {
-            System.out.println("Debes ingresar un numero entero");
-            getInfo.next(); // limpia el valor inválido
-        }
-    }
-
-     p.setPrecio(precio);
-     p.setCosto_Unitario(costo);
-     p.setCantidadMinima(cantidadMinima);
-     p.setCategoria_id(seleccionarCategoria()); // Por defecto
+        int categoriaSeleccionada = seleccionarCategoria();
+        p.setCategoria_id(categoriaSeleccionada); // Por defecto
     
     service.actualizarProducto(p);
-    System.out.println("Producto actualizado exitosamente");
+    //System.out.println(colores.GREEN+"Producto actualizado exitosamente"+colores.RESET);
     }  
+
      else {
-    System.out.println("Producto no encontrado. Saliendo al menú prinicipal");
+    System.out.println(colores.YELLOW+"Producto no encontrado. Saliendo al menú prinicipal"+colores.RESET);
     System.out.println("+----------------------------------------------------+"); } }   
 
     private void eliminarProducto(){

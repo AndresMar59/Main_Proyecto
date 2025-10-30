@@ -138,7 +138,7 @@ public class productoDAO {
         if (!errores.isEmpty()) {
             System.out.println("No se actualizó: " + String.join(" | ", errores));
         } else {
-            System.out.println("Producto actualizado correctamente.");
+            System.out.println(colores.GREEN+"Producto actualizado correctamente."+colores.RESET);
         }
     }
 
