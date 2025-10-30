@@ -2,16 +2,19 @@ package producto;
 
 public class producto {
 
-    int id;
-    String nombre;
-    double precio;
-    double Costo_Unitario;
-    int cantidad;  //stock disponible
-    int cantidad_minima; //stock minimo
-    int categoria_id; //1=electronica, 2=ropa, 3=hogar, 4=deportes, 5=juguetes
+    //Se siguen buenas practicas de encapsulamiento, por lo que los atributos son privados y se accede a ellos mediante getters y setters.3
+    //Ademas que solo se puede acceder a los atributos desde dentro de la clase.
+    private int id;
+    private String nombre;
+    private double precio;
+    private double Costo_Unitario;
+    private int cantidad;  //stock disponible
+    private int cantidad_minima; //stock minimo
+    private int categoria_id; //1=electronica, 2=ropa, 3=hogar, 4=deportes, 5=juguetes
 
     //Constructor
 
+    //Vacio, indispensable para ciertas operaciones como las consultas a la base de datos.
     public producto() {} //crea un producto vacío, para luego setear sus valores con los setters o desde unca consulta a la BD. - Crea el objeto sin darle valores todavia.
     /*
      * Con el constructor vacio se utiliza para crear objetos de la clase producto sin valores iniciales.
@@ -23,6 +26,7 @@ public class producto {
      * se utiliza cuando ya se tienen todos los datos en memoria. 
      */
 
+     //Constructor lleno, se deja para propósitos de prueba o si se quiere crear un producto directamente con todos sus valores.
     public producto(int id, String nombre, double precio, double Costo_Unitario, int cantidad, int cantidad_minima ,
                     int categoria_id) {
         this.id = id;
@@ -35,13 +39,17 @@ public class producto {
 
     }
 
-    //Getters y Setters
+    //Getters y Setters - metodos controlados para acceder y modificar los atributos privados de la clase. -Siguiendo siempre los principios de encapsulamiento.
+    //Get si se quiere obtener el valor del atributo.
+    //Set si se quiere modificar el valor del atributo.    
     public int getId() {
         return id;
     }
+    //Se remueve porque no se deberia modificar el ID una vez creado el producto.
+    /*
     public void setId(int id) {  // Quitar lo de set ID. Puede generar problema
         this.id = id;
-    }
+    } */
     public String getNombre() {
         return nombre;
     }
