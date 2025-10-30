@@ -4,6 +4,7 @@ public class producto {
 
     //Se siguen buenas practicas de encapsulamiento, por lo que los atributos son privados y se accede a ellos mediante getters y setters.3
     //Ademas que solo se puede acceder a los atributos desde dentro de la clase.
+    //Atributos
     private int id;
     private String nombre;
     private double precio;
