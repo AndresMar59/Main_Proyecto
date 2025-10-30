@@ -1,8 +1,9 @@
-package conexionBD;
+package conexionBD; 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+//
+import java.sql.Connection;  //representa la conexión a la base de datos //enviar consultas y recibir resultados
+import java.sql.DriverManager; //gestiona un conjunto de controladores de bases de datos JDBC drivers y establece conexiones con bases de datos
+import java.sql.SQLException; //maneja errores relacionados con la base de datos
 
 
 public class conexionBD {
@@ -15,7 +16,7 @@ public class conexionBD {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(URL, USUARIO, CLAVE);
-           // System.out.println("Conexión exitosa a la base de datos MySQL");
+           //System.out.println("Conexión exitosa a la base de datos MySQL");
         } catch (SQLException e) {
             System.out.println(" Error de conexión: " + e.getMessage());
         }

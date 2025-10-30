@@ -12,8 +12,11 @@ public class producto {
 
     //Constructor
 
-    public producto() {}
+    public producto() {} //crea un producto vacío, para luego setear sus valores con los setters o desde unca consulta a la BD. - Crea el objeto sin darle valores todavia.
+    /*Es */
 
+
+    //Crea un producto con todos sus atributos - 
     public producto(int id, String nombre, double precio, double Costo_Unitario, int cantidad, int cantidad_minima ,
                     int categoria_id) {
         this.id = id;
