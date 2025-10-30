@@ -60,7 +60,7 @@ public class productoDAO {
         }
     }
 
-
+    //Se guardan varios objetos producto en una lista.
     public List<producto> obtenerProductos() {//se utiliza import java.util.List; para devolver una lista de productos.
         List<producto> producto = new ArrayList<>(); //Crea una lista vacia para almacenar los productos obtenidos de la base de datos. //es un objeto dinamico que puede crecer segun se agreguen productos.
         String sql = "SELECT * FROM producto"; //prepara la consulta SQL para obtener todos los productos de la tabla producto.
@@ -85,17 +85,22 @@ public class productoDAO {
          return producto; //Devuelve la lista de productos obtenidos de la base de datos.
     }
          
+    // Obtener un producto por su ID
     public producto obtenerProductoPorID(int id) {
-        producto p = null;
-        String sql = "SELECT * FROM producto WHERE id = ?";
+        producto p = null; //Inicializa la variable p como null. Esta variable almacenara el producto obtenido de la base de datos.
+        String sql = "SELECT * FROM producto WHERE id = ?"; //prepara la consulta SQL para obtener un producto especifico por su ID.
+        //el ? es un espacio reservado para un parametro que se establecera mas adelante.
 
-        try (Connection conn = conexionBD.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setInt(1, id);  // Este set es sobre la query?
-            ResultSet rs = pstmt.executeQuery();  
+        try (Connection conn = conexionBD.getConnection();//obtiene una conexion a la base de datos llamando al metodo getConnection() de la clase conexionBD.
+            PreparedStatement pstmt = conn.prepareStatement(sql)){//prepara la consulta SQL con un parametro seguro para el ID del producto.
+            pstmt.setInt(1, id);  //Establece el valor del parametro en la consulta SQL utilizando el ID proporcionado.
+            //el 1 indica el espacio del primer ? en la consulta SQL. Se sustituye el ? por el valor de id.
+            ResultSet rs = pstmt.executeQuery(); //Ejecuta la consulta SQL y obtiene los resultados en un objeto ResultSet.
 
-            if(rs.next()){
-                p = new producto(
+             //Si hay un resultado, crea un nuevo objeto producto utilizando los datos del ResultSet. 
+
+            if(rs.next()){ //El rs.next() mueve el cursor a la siguiente fila y devuelve true si hay una fila disponible.
+                p = new producto(//Crea un nuevo objeto producto utilizando los datos del ResultSet. Esta seria la lista de producto ahora asignado como p.
                         rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getDouble("precio"),
@@ -105,22 +110,23 @@ public class productoDAO {
                         rs.getInt("categoria_id")
                 );
             }
-        }catch(SQLException e){
+        }catch(SQLException e){//Si hay un error al obtener el producto, captura la excepcion SQLException y muestra un mensaje de error.
             System.out.println("Error al obtener: " + e.getMessage());
         }
-        return p;
+        return p;//Devuelve el objeto producto obtenido de la base de datos. Si no se encontro ningun producto con ese ID, devuelve null.
     }
 
-
-    private boolean existeProductoPorId(Connection conn, int id) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM producto WHERE id=?")) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
+    //Se utiliza para validar si un producto existe antes de actualizarlo.
+    private boolean existeProductoPorId(Connection conn, int id) throws SQLException {//Lanza SQLException para que el metodo que lo llame maneje la excepcion.
+        try (PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM producto WHERE id=?")) {//prepara la consulta SQL para verificar si un producto existe por su ID.
+            ps.setInt(1, id);//Establece el valor del parametro en la consulta SQL utilizando el ID proporcionado.
+            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }//Ejecuta la consulta SQL y devuelve true si hay un resultado (el producto existe), false si no.
         }
     }
 
   
-
+    //ACTUALIZAR PRODUCTO CON VALIDACION
+    //Trabaja con la base de datos para actualizar un producto existente.
      public List<String> actualizarProductoConValidacion(producto p) {
         List<String> errores = new ArrayList<>();
         String sql = "UPDATE producto SET nombre = ?, precio = ?, Costo_Unitario = ?, cantidad_minima = ?, categoria_id = ? WHERE id = ?";
