@@ -31,30 +31,31 @@ import java.util.List;//importa la interfaz List de java.util para usar listas g
 public class productoDAO {
 
     public void agregarProducto(producto p) {
-        String sql = "INSERT INTO producto (nombre, precio, Costo_Unitario, cantidad, cantidad_minima, categoria_id) VALUES (?,?,?,?, ?, ?)";
-        try (Connection conn = conexionBD.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) { //prepara consulta SQL con parametros seguros. Luego se llenan con valores reales en tiempo de ejecucion.
+        String sql = "INSERT INTO producto (nombre, precio, Costo_Unitario, cantidad, cantidad_minima, categoria_id) VALUES (?,?,?,?, ?, ?)"; //prepara la consulta SQL para insertar un nuevo producto en la tabla producto.
+        try (Connection conn = conexionBD.getConnection(); //obtiene una conexion a la base de datos llamando al metodo getConnection() de la clase conexionBD.
+             PreparedStatement pstmt = conn.prepareStatement(sql)) { //prepara consulta SQL con parametros seguros. Luego se llenan con valores reales en tiempo de ejecucion. Consulta preparada.
 
-            //System.out.println("➡ Insertando producto.producto con categoria_id = " + p.getCategoria_id()); // 👈 debug line
+            //System.out.println("➡ Insertando producto.producto con categoria_id = " + p.getCategoria_id()); //
 
-            pstmt.setString(1, p.getNombre());
+            //Establece los valores de los parametros en la consulta SQL utilizando los getters del objeto producto p. //setString es para cadenas de texto, el set significa que se va a setear un valor en la consulta SQL.
+            //Se van rellenando los ? en la consulta SQL.
+            pstmt.setString(1, p.getNombre()); //Establece los valores de los parametros en la consulta SQL utilizando los getters del objeto producto p. //setString es para cadenas de texto, el set significa que se va a setear un valor en la consulta SQL.
             pstmt.setDouble(2, p.getPrecio());
             pstmt.setDouble(3, p.getCosto_Unitario());
             pstmt.setInt(4, p.getCantidad());
             pstmt.setInt(5, p.getCantidadMinima());
             pstmt.setInt(6, p.getCategoria_id());
-            //pstmt.executeUpdate();
 
-            int filasAfectadas = pstmt.executeUpdate();
+            int filasAfectadas = pstmt.executeUpdate(); //Ejecuta la consulta SQL preparada. Devuelve el numero de filas afectadas por la operacion (insert, update, delete).
 
-            if (filasAfectadas > 0) {
+            if (filasAfectadas > 0) { //Si se afecto al menos una fila, el producto se inserto correctamente.
                 System.out.println(colores.GREEN+ "Producto registrado exitosamente en la base de datos."+colores.RESET);
             } else {
                 System.out.println(colores.YELLOW+ "No se pudo registrar el producto."+colores.RESET);
             }
 
         } catch (SQLException e) {
-            System.out.println("Error al insertar: " + e.getMessage());
+            System.out.println("Error al insertar: " + e.getMessage()); //Si hay un error al insertar, captura la excepcion SQLException y muestra un mensaje de error.
 
         }
     }
