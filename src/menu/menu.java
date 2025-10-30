@@ -41,7 +41,7 @@ public class menu {
 
     public void mostrarMenu(){
 
-//Variables
+        //Variables
         int opcion = -1; //Se declara la variable que se utilizara para ingresar la opcion del menu, se uso -1 porque no es una opcion real del menu, al entrar una de las opciones del menu ya se cambia.
 
         //Menu - while para que no se cierra a no ser que el usuario quiera cerrarlo.
