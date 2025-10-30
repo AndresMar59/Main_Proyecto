@@ -1,24 +1,39 @@
 package producto;
 
-import conexionBD.conexionBD;
+import conexionBD.conexionBD; //import la clase conexionBD del paquete conexionBD para gestionar la conexión a la base de datos.
 
-import util.colores;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import util.colores; //importa la clase colores del paquete util para usar colores en la consola.
+//importa las clases necesarias de java.sql para manejar la base de datos.
+import java.sql.Connection; //importa la clase Connection de java.sql para manejar conexiones a la base de datos.
+import java.sql.PreparedStatement; //importa la clase PreparedStatement de java.sql para ejecutar sentencias SQL precompiladas. Envia datos a la base de datos.
+//Es decir que se usa para enviar instrucciones SQL a la base de datos de manera eficiente y segura.
+//Es util porque escapa automaticamente los caracteres especiales, ayudando a prevenir ataques de inyección SQL.
+import java.sql.ResultSet; //importa la clase ResultSet de java.sql para manejar los resultados de las consultas SQL SELECTO * FROM .Traer datos desde la base de datos.
+//Es una estructura en memoria que contiene el resultado de una consulta SQL ejecutada contra la base de datos.
+//Es una tabla virtual que permite recorrer y acceder a los datos fila por fila.
+//una tabla sql se convierte en una lista de objetos en java.
+import java.sql.Statement; //importa la clase Statement de java.sql para ejecutar sentencias SQL simples sin parametros. Ejecuta consultas SQL directas
+//Es una interfaz que permite enviar instrucciones SQL DIRECTAMENTE a la base de datos y obtener resultados.
+//JDBC: Java Database Connectivity.
+//Se usa con comandos sql como SELECT, INSERT, UPDATE, DELETE.
+import java.sql.SQLException;//importa la clase SQLException de java.sql para manejar errores relacionados con la base de datos.
 
+import java.util.ArrayList;//importa la clase ArrayList de java.util para usar listas dinámicas.
+import java.util.List;//importa la interfaz List de java.util para usar listas genéricas.
 
+/**
+ * DAO (Data Access Object) para la clase producto.
+ * Proporciona métodos para realizar operaciones CRUD en la base de datos relacionadas con productos.
+ * Se comunica directamente con la base de datos utilizando JDBC, ejecutando consultas SQL, devolviendo o guardando datos.
+ * Estructura: Menu principal -> DAO -> conexionBD -> Base de datos.
+ */
 
 public class productoDAO {
 
     public void agregarProducto(producto p) {
         String sql = "INSERT INTO producto (nombre, precio, Costo_Unitario, cantidad, cantidad_minima, categoria_id) VALUES (?,?,?,?, ?, ?)";
         try (Connection conn = conexionBD.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) { //prepara consulta SQL con parametros seguros. Luego se llenan con valores reales en tiempo de ejecucion.
 
             //System.out.println("➡ Insertando producto.producto con categoria_id = " + p.getCategoria_id()); // 👈 debug line
 
