@@ -158,7 +158,7 @@ public class menu {
         //System.out.println(); // ← mejora visual
 
         System.out.println("═════════════════════════════════");
-        System.out.println("REGISTRO DE PRODUCTOS");
+        System.out.println("     REGISTRO DE PRODUCTOS");
         System.out.println("═════════════════════════════════");
         //getInfo.nextLine(); // <-- limpiar buffer antes de pedir el nombre
         System.out.print("Nombre: ");
@@ -256,49 +256,64 @@ public class menu {
     System.out.println("╚══════╧════════════════════════════╧════════════╧════════════╧════════════╧════════════╧════════╝");
 }
 
-
+    //Filtrar producto - Read
     private void filtrarProductos(){
       //  System.out.println("Buscar producto por ID");
-        System.out.println("Ingrese el ID del producto.");
+        System.out.println("══════════════════════════════");
+        System.out.println("    BUSQUEDA DE PRODUCTOS");
+        System.out.println("══════════════════════════════");
+        System.out.print("ID del producto: ");
 
     int id = -1;
     boolean entradaValida = false;
+    String idInput;
 
-        while(!entradaValida){
-     //     System.out.println("Debes ingresas un numero");
-            if (getInfo.hasNextInt()) {
-                id = getInfo.nextInt();
-                getInfo.hasNextLine();
-                entradaValida = true;  
-            } else { System.out.println("Debes ingresar un numero valido");
-            getInfo.nextLine(); // limpiar entrada incorrecta
+        while (!entradaValida) {
+            idInput = getInfo.nextLine().trim();
+            if (idInput.isEmpty() || !idInput.matches("\\d+")) {
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.println(colores.RED+"**ERROR! El campo ID no puede estar vacio y solo debe llevar numeros.**"+colores.RESET);
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.print("Ingrese el ID nuevamente: ");     
+                continue;
+            }
+            try {
+                id = Integer.parseInt(idInput);
+                entradaValida = true;
+            } catch (NumberFormatException e) {
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.println(colores.RED+"**ERROR! El campo ID solo debe llevar numeros.**"+colores.RESET);
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.print("Ingrese el ID nuevamente: ");     
+            }
+            
         }
-    }
+
         producto encontrado = service.obtenerProductoPorID(id);
 
         if (encontrado != null) {
             final String RESET = "\u001B[0m";
-final String CYAN = "\u001B[36m";
-final String GREEN = "\u001B[32m";
-final String YELLOW = "\u001B[33m";
+            final String CYAN = "\u001B[36m";
+            final String GREEN = "\u001B[32m";
+            final String YELLOW = "\u001B[33m";
 
-System.out.println(CYAN + "\n══════════════════════════════════════");
-System.out.println("           PRODUCTO ENCONTRADO         ");
-System.out.println("══════════════════════════════════════" + RESET);
-System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "ID", encontrado.getId());
-System.out.printf(GREEN + "%-20s: " + YELLOW + "%s%n", "Nombre", encontrado.getNombre());
-System.out.printf(GREEN + "%-20s: " + YELLOW + "%.2f%n", "Precio", encontrado.getPrecio());
-System.out.printf(GREEN + "%-20s: " + YELLOW + "%.2f%n", "Costo unitario", encontrado.getCosto_Unitario());
-System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Cantidad", encontrado.getCantidad());
-System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Cantidad mínima", encontrado.getCantidadMinima());
-System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Categoría", encontrado.getCategoria_id());
-System.out.println(RESET + CYAN + "══════════════════════════════════════\n"+RESET);
-
+            System.out.println(CYAN + "\n══════════════════════════════════════");
+            System.out.println("           PRODUCTO ENCONTRADO         ");
+            System.out.println("══════════════════════════════════════" + RESET);
+            System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "ID", encontrado.getId());
+            System.out.printf(GREEN + "%-20s: " + YELLOW + "%s%n", "Nombre", encontrado.getNombre());
+            System.out.printf(GREEN + "%-20s: " + YELLOW + "%.2f%n", "Precio", encontrado.getPrecio());
+            System.out.printf(GREEN + "%-20s: " + YELLOW + "%.2f%n", "Costo unitario", encontrado.getCosto_Unitario());
+            System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Cantidad", encontrado.getCantidad());
+            System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Cantidad mínima", encontrado.getCantidadMinima());
+            System.out.printf(GREEN + "%-20s: " + YELLOW + "%d%n", "Categoría", encontrado.getCategoria_id());
+            System.out.println(RESET + CYAN + "══════════════════════════════════════\n"+RESET);
+        
         }else {
-            System.out.println("Producto no encontrado");
-            System.out.println(" ");
-            System.out.println("Volviendo al menu...");
-
+            System.out.println("-------------------------------------");
+            System.out.println(colores.RED+"Producto no encontrado"+colores.RESET);
+            System.out.println("------------------------------------- ");
+            System.out.println(colores.CYAN+"Volviendo al menu..."+colores.RESET);
 
         }
     }
