@@ -2,13 +2,13 @@ package producto;
 
 public class producto {
 
-    int id;
-    String nombre;
-    double precio;
-    double Costo_Unitario;
-    int cantidad;  //stock disponible
-    int cantidad_minima; //stock minimo
-    int categoria_id; //1=electronica, 2=ropa, 3=hogar, 4=deportes, 5=juguetes
+    private int id;
+    private String nombre;
+    private double precio;
+    private double Costo_Unitario;
+    private int cantidad;  //stock disponible
+    private int cantidad_minima; //stock minimo
+    private int categoria_id; //1=electronica, 2=ropa, 3=hogar, 4=deportes, 5=juguetes
 
     //Constructor
 
