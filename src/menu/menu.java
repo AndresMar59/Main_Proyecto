@@ -447,13 +447,43 @@ public class menu {
     System.out.println(colores.YELLOW+"Producto no encontrado. Saliendo al menú prinicipal"+colores.RESET);
     System.out.println("+----------------------------------------------------+"); } }   
 
+    //Eliminar producto - Delete
     private void eliminarProducto(){
-        System.out.println("Eliminar producto");
-        obtenerProductos();
-        System.out.println("Ingrese el ID del producto.producto a eliminar: ");
-        int id = getInfo.nextInt(); getInfo.nextLine(); //Limpiar buffer
+        System.out.println("══════════════════════════════");
+        System.out.println("    ELIMINAR PRODUCTOS");
+        System.out.println("══════════════════════════════");
+         obtenerProductos();
+        System.out.print("ID del producto: ");
+
+        int id = -1;
+        boolean entradaValida = false;
+        String idInput;
+
+        while (!entradaValida) {
+            idInput = getInfo.nextLine().trim();
+            if (idInput.isEmpty() || !idInput.matches("\\d+")) {
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.println(colores.RED+"**ERROR! El campo ID no puede estar vacio y solo debe llevar numeros.**"+colores.RESET);
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.print("Ingrese el ID nuevamente: ");     
+                continue;
+            }
+            try {
+                id = Integer.parseInt(idInput);
+                entradaValida = true;
+            } catch (NumberFormatException e) {
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.println(colores.RED+"**ERROR! El campo ID solo debe llevar numeros.**"+colores.RESET);
+                System.out.println("═════════════════════════════════════════════════════════════════════════");
+                System.out.print("Ingrese el ID nuevamente: ");     
+            }
+            
+        }
+
         service.eliminarProducto(id);
-        System.out.println("Producto eliminado exitosamente.");
+        
+        //System.out.println(colores.GREEN+"Producto eliminado exitosamente."+colores.RESET);
+        
     }
 
     private int seleccionarCategoria(){

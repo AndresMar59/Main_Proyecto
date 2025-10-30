@@ -152,9 +152,11 @@ public class productoDAO {
             int filas = pstmt.executeUpdate(); 
 
             if (filas > 0) {
-                System.out.println("Producto eliminado correctamente.");
+                System.out.println("-------------------------------------");
+                System.out.println(colores.GREEN+"Producto eliminado correctamente."+colores.RESET);
             } else {
-                System.out.println("No se encontró un producto.producto con ese ID.");
+                System.out.println("-------------------------------------");
+                System.out.println(colores.YELLOW+"No se encontró un producto con ese ID."+colores.RESET);
             }
 
         } catch (SQLException e) {
