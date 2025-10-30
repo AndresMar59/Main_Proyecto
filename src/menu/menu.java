@@ -65,7 +65,7 @@ public class menu {
             String input = getInfo.nextLine().trim();
 
             if (input.isEmpty()) {
-                System.out.println(colores.RED+"Error! Debe seleccionar una opcion del menu"+colores.RESET);
+                System.out.println(colores.RED+"**Error! Debe seleccionar una opcion del menu.**"+colores.RESET);
                 System.out.println("──────────────────────────────────────────────────");
                 continue;                
             }
@@ -74,14 +74,14 @@ public class menu {
             try {
                 opcion = Integer.parseInt(input);
                 if (opcion < 1 || opcion > 9) {
-                    System.out.println(colores.RED+"Error! Debe seleccionar una opcion del menu"+colores.RESET);
+                    System.out.println(colores.RED+"**Error! Debe seleccionar una opcion del menu**"+colores.RESET);
                     System.out.println("──────────────────────────────────────────────────");
                     opcion = -1; // Reiniciar opcion para repetir el bucle
                     
                 }
                
             } catch(NumberFormatException e) {
-                System.out.println(colores.RED+"Error! Debe seleccionar una opcion del menu"+colores.RESET);
+                System.out.println(colores.RED+"**Error! Debe seleccionar una opcion del menu**"+colores.RESET);
                 System.out.println("──────────────────────────────────────────────────");
             }
 
@@ -94,14 +94,14 @@ public class menu {
             case 1:
                 //System.out.println ("Registrar producto");
                 registrarProducto();
-                System.out.println("Volviendo al menu principal...");
+                System.out.println(colores.CYAN+"Volviendo al menu principal..."+colores.RESET);
                 System.out.println("──────────────────────────────────────────────────");
                 break;
             case 2:
                 //System.out.println ("Listar productos");
                 System.out.print("");
                 obtenerProductos();
-                System.out.println("Volviendo al menu principal...");
+                System.out.println(colores.CYAN+"Volviendo al menu principal..."+colores.RESET);
                 System.out.println("──────────────────────────────────────────────────");
                 break;
             case 3:
@@ -111,13 +111,13 @@ public class menu {
             case 4:
                 //System.out.println ("Actualizar producto.producto.");
                 actualizarProducto();
-                System.out.println("Volviendo al menu principal...");
+                System.out.println(colores.CYAN+"Volviendo al menu principal..."+colores.RESET);
                 System.out.println("──────────────────────────────────────────────────");
                 break;
             case 5:
                 //System.out.println ("Eliminar producto.producto.");
                 eliminarProducto();
-                System.out.println("Volviendo al menu principal...");
+                System.out.println(colores.CYAN+"Volviendo al menu principal..."+colores.RESET);
                 System.out.println("──────────────────────────────────────────────────");
                 break;
             case 6:
@@ -125,7 +125,7 @@ public class menu {
                 //bajostock();
                 System.out.println(" ");
                 bajostock();  //  Aquí se usa
-                System.out.println("Volviendo al menu principal...");
+                System.out.println(colores.CYAN+"Volviendo al menu principal..."+colores.RESET);
                 System.out.println("──────────────────────────────────────────────────");
                 break;
             case 7:
@@ -173,8 +173,9 @@ public class menu {
             costo = Double.parseDouble(validacionesDeCampos("costo"));
 
             if (costo > precio) {
-                System.out.println(colores.YELLOW+ "El Costo unitario no puede ser mayor que el precio $ (" + precio +")" +colores.RESET);
-            
+                System.out.println("-----------------------------------------------------------------");
+                System.out.println(colores.YELLOW+ "El Costo unitario no puede ser mayor o igual que el precio $(" + precio +")." +colores.RESET);
+                System.out.println("-----------------------------------------------------------------");
             }else{
                 break;
             }
@@ -225,7 +226,7 @@ public class menu {
 }
 
 
-private void bajostock() {
+    private void bajostock() {
     List<producto> productos = service.obtenerProductos();
     boolean bajoStockfound = false;
 
@@ -392,9 +393,6 @@ System.out.println(RESET + CYAN + "═══════════════
     System.out.println("Producto no encontrado. Saliendo al menú prinicipal");
     System.out.println("+----------------------------------------------------+"); } }   
 
-
-
-
     private void eliminarProducto(){
         System.out.println("Eliminar producto");
         obtenerProductos();
@@ -445,9 +443,8 @@ System.out.println(RESET + CYAN + "═══════════════
 
     }
 
-
     //Nuevo metodo para no aceptar campos vacios, texto o numeros
-private String validacionesDeCampos(String dato){
+    private String validacionesDeCampos(String dato){
 
         String entrada = "";
         boolean valido = false;
@@ -458,7 +455,7 @@ private String validacionesDeCampos(String dato){
                 System.out.println("══════════════════════════════════════════════");
                 System.out.println(colores.RED+"**ERROR! Todos los campos deben ser llenados**"+colores.RESET);
                 System.out.println("══════════════════════════════════════════════");
-                System.out.print("Ingrese el dato: ");     
+                System.out.print("Ingrese el dato nuevamente: ");     
                 continue;
             }
 
@@ -562,7 +559,7 @@ private String validacionesDeCampos(String dato){
             }} }
 }
 
-private void registrarMovimiento() {
+    private void registrarMovimiento() {
     obtenerProductos();
     System.out.println("Presione enter para registrar Movimiento de Inventario");
     getInfo.nextLine(); //Limpiar buffer
