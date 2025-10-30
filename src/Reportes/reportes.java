@@ -5,6 +5,7 @@ import com.itextpdf.text.*;    // LIBRERIA DE 5.5.13.2 Jar.
 import com.itextpdf.text.pdf.*;
 import java.io.FileOutputStream;
 import java.util.List;
+import util.colores;
 
 public class reportes {  // clase reportes
     private productoDAO dao = new productoDAO();  // Para llamar los metodos de productoDAO para la info que ocupemos
@@ -34,7 +35,7 @@ public class reportes {  // clase reportes
             doc.add(tabla);
             doc.close();
 
-            System.out.println("Reporte generado en: " + ruta);
+            System.out.println(colores.PURPLE+"Reporte generado en: " + ruta+colores.RESET);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,7 +67,7 @@ public void AVG_Utilidad (String ruta) {
             doc.add(tabla);
             doc.close();
 
-            System.out.println("Reporte generado en: " + ruta);
+            System.out.println(colores.PURPLE+"Reporte generado en: " + ruta+colores.RESET);
 
         } catch (Exception e) {
             e.printStackTrace();

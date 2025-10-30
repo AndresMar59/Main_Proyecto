@@ -129,21 +129,22 @@ public class menu {
                 System.out.println("──────────────────────────────────────────────────");
                 break;
             case 7:
-                    System.out.println (" ");
-                    mostrarReportes();
-                    break;
-                case 8:
+                System.out.println (" ");
+                mostrarReportes();
+                System.out.println(colores.CYAN+"Volviendo al menu principal..."+colores.RESET);
+                break;
+            case 8:
                 System.out.println("8. Registrar movimiento de inventario");
                 registrarMovimiento();
                 break;    
-                case 9:
-                    System.out.println ("Gracias por usar el sistema de gestion de inventario. Saliendo...");
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("═══════════════════════════════════════════════");
-                    System.out.println (colores.RED+ "Error! Debe seleccionar una opcion del menu" +colores.RESET);
-                    System.out.println("═══════════════════════════════════════════════");
+            case 9:
+                System.out.println ("Gracias por usar el sistema de gestion de inventario. Saliendo...");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("═══════════════════════════════════════════════");
+                System.out.println (colores.RED+ "Error! Debe seleccionar una opcion del menu" +colores.RESET);
+                System.out.println("═══════════════════════════════════════════════");
             }
 
         }
@@ -486,6 +487,7 @@ public class menu {
         
     }
 
+    //Metodo para seleccionar categoria con validacion
     private int seleccionarCategoria(){
         int opc = -1; 
         boolean valido = false;
@@ -594,7 +596,7 @@ public class menu {
 
         return entrada; }
 
-
+    //Metodo para mostrar el menu de reportes    
     private void mostrarReportes() {
     reportes reportes = new reportes();
     String home = System.getProperty("user.home");
@@ -603,46 +605,56 @@ public class menu {
 
        
         System.out.println("╔══════════════════════════════════════╗");
-        System.out.println("║             MENÚ DE REPORTES         ║");
+        System.out.println("║           MENÚ DE REPORTES           ║");
         System.out.println("╚══════════════════════════════════════╝");
         System.out.println("1. Valor total por categoría");
         System.out.println("2. Promedio de utilidad por categoría");
         System.out.println("0. Volver al menú principal");
+        System.out.println("--------------------------------------");
 
-         while (opc != 0) {
-        System.out.print("Seleccione una opción: ");
-        System.out.println("");
+         do {
+            System.out.print("Seleccione una opción: ");
+            String input = getInfo.nextLine().trim();
 
-        if (!getInfo.hasNextInt()) {
-            System.out.println("Debe ingresar un numero entero");
-            System.out.println(" ");
-            getInfo.nextLine(); // limpiar entrada incorrecta
-            continue; // vuelve a mostrar el menú completo
-        } 
+            if (input.isEmpty()) {
+                System.out.println(colores.RED+"**Error! Debe seleccionar una opcion del menu.**"+colores.RESET);
+                System.out.println("──────────────────────────────────────────────────");
+                continue;                
+            }
 
-        opc = getInfo.nextInt();
-        getInfo.nextLine(); // limpiar buffer
+                //Validacion de que se ingrese la opcion correcta!
+            try {
+                opc = Integer.parseInt(input);
+                if (opc < 0 || opc > 2) {
+                    System.out.println(colores.RED+"**Error! Debe seleccionar una opcion del menu**"+colores.RESET);
+                    System.out.println("──────────────────────────────────────────────────");
+                    opc = -1; // Reiniciar opcion para repetir el bucle
+                    
+                }
+               
+            } catch(NumberFormatException e) {
+                System.out.println(colores.RED+"**Error! Debe seleccionar una opcion del menu**"+colores.RESET);
+                System.out.println("──────────────────────────────────────────────────");
+            }
 
-        if (opc < 0 || opc > 2) {
-            System.out.println("Opción inválida. Debe ser 0, 1 o 2");
-            System.out.println(" ");
-            continue; // vuelve al menú
-        }
+        } while (opc == -1);
+
 
          switch (opc) {
             case 1 -> {System.out.println(" "); String rutaPrecio = home + "\\Downloads\\Reporte_Precios.pdf";
             reportes.PrecioTotalCategoria(rutaPrecio);
             }
             case 2 ->{ System.out.println(" ");
-    String rutaUtilidad = home + "\\Downloads\\Reporte_Utilidad.pdf";
-    reportes.AVG_Utilidad(rutaUtilidad);}
+            String rutaUtilidad = home + "\\Downloads\\Reporte_Utilidad.pdf";
+            reportes.AVG_Utilidad(rutaUtilidad);}
             case 0 -> {
-            System.out.println(" ");    
-            System.out.println("Volviendo al menú principal...");
+            System.out.println("-------------------------------------");
+            System.out.println(colores.CYAN+"Volviendo al menú principal..."+colores.RESET);
             System.out.println(" "); break;
             }} }
-}
 
+    
+    //Metodo para registrar movimientos de inventario
     private void registrarMovimiento() {
     obtenerProductos();
     System.out.println("Presione enter para registrar Movimiento de Inventario");
