@@ -61,15 +61,15 @@ public class productoDAO {
     }
 
 
-    public List<producto> obtenerProductos() {
-        List<producto> producto = new ArrayList<>();
-        String sql = "SELECT * FROM producto"; //SELECT p.*, c.nombre AS categoria FROM producto.producto p JOIN categoria c ON p.categoria_id = c.id
-        try (Connection conn = conexionBD.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                producto p = new producto(
-                        rs.getInt("id"),
+    public List<producto> obtenerProductos() {//se utiliza import java.util.List; para devolver una lista de productos.
+        List<producto> producto = new ArrayList<>(); //Crea una lista vacia para almacenar los productos obtenidos de la base de datos. //es un objeto dinamico que puede crecer segun se agreguen productos.
+        String sql = "SELECT * FROM producto"; //prepara la consulta SQL para obtener todos los productos de la tabla producto.
+        try (Connection conn = conexionBD.getConnection();//obtiene una conexion a la base de datos de llamando al metodo getConnection() de la clase conexionBD.
+             Statement stmt = conn.createStatement();//crea un objeto Statement para ejecutar la consulta SQL.
+             ResultSet rs = stmt.executeQuery(sql)) {//ejecuta la consulta SQL y obtiene los resultados en un objeto ResultSet.
+            while (rs.next()) {//itera sobre los resultados del ResultSet. El rs.next() mueve el cursor a la siguiente fila y devuelve true si hay una fila disponible.
+                producto p = new producto(//Crea un nuevo objeto producto utilizando los datos del ResultSet. Esta seria la lista de productos ahora asignado como p.
+                        rs.getInt("id"), //obtiene el valor de la columna "id" como entero. El getInt es para obtener valores enteros desde la base de datos.
                         rs.getString("nombre"),
                         rs.getDouble("precio"),
                         rs.getDouble("Costo_Unitario"),
@@ -77,13 +77,14 @@ public class productoDAO {
                         rs.getInt("cantidad_minima"),
                         rs.getInt("categoria_id")
                 );
-                producto.add(p);
+                producto.add(p);//Agrega el objeto producto a la lista de productos.
             }
-        } catch (SQLException e) {
+        } catch (SQLException e) {//Si hay un error al obtener los productos, captura la excepcion SQLException y muestra un mensaje de error.
             System.out.println("Error al listar: " + e.getMessage());
         }
-         return producto;}
-
+         return producto; //Devuelve la lista de productos obtenidos de la base de datos.
+    }
+         
     public producto obtenerProductoPorID(int id) {
         producto p = null;
         String sql = "SELECT * FROM producto WHERE id = ?";
