@@ -13,8 +13,16 @@ public class producto {
     //Constructor
 
     public producto() {} //crea un producto vacío, para luego setear sus valores con los setters o desde unca consulta a la BD. - Crea el objeto sin darle valores todavia.
-    /*Es */
-    
+    /*
+     * Con el constructor vacio se utiliza para crear objetos de la clase producto sin valores iniciales.
+     * Esto es util cuando se quiere crear un objeto y luego asignar valores a sus atributos utilizando los setters.
+     * En este caso algunas librerias or frameworks como JDBC requieren un constructor vacio para poder instanciar objetos de la clase. Y luego setear los valores.
+     * En este caso, los datos vienen de consultas con ResultSet, por lo que primero se crea el objeto vacio y luego se llenan los datos.
+     * O tambien, como es entrada de informacion, no se sabe que valores tendra el producto hasta q el usuario los ingrese.
+     * El constructor lleno, por otro lado, se utiliza cuando se tienen todos los valores disponibles al momento de crear el objeto.
+     * se utiliza cuando ya se tienen todos los datos en memoria. 
+     */
+
     public producto(int id, String nombre, double precio, double Costo_Unitario, int cantidad, int cantidad_minima ,
                     int categoria_id) {
         this.id = id;
