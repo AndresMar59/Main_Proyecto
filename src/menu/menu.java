@@ -671,7 +671,7 @@ public class menu {
                 getInfo.nextLine(); // limpiar entrada incorrecta
                 continue;
             }
-
+            
             idP = getInfo.nextInt();
             getInfo.nextLine(); // limpiar buffer
 
@@ -686,47 +686,52 @@ public class menu {
             break;
             }  // salida del bucle si todo es válido 
             
-    
-        while (true) {
-            System.out.print("Ingrese la cantidad: ");
-            if (!getInfo.hasNextInt()) {System.out.println("La cantidad debe ser un numero entero"); System.out.println(" ");
+            
+            while (true) {
+                System.out.println("---------------------------");
+                System.out.print("Ingrese la cantidad: ");
+                if (!getInfo.hasNextInt()) {System.out.println(colores.YELLOW+"La cantidad debe ser un numero entero"+colores.RESET); System.out.println(" ");
                 getInfo.nextLine();
                 continue;}
 
-            cantidad = getInfo.nextInt();
-            getInfo.nextLine();
-            if (cantidad <= 0) {
-                System.out.println("La cantidad debe ser mayor que cero"); System.out.println(" ");
-                continue;}
-            break;
-        }
+                cantidad = getInfo.nextInt();
+                getInfo.nextLine();
+                if (cantidad <= 0) {
+                    System.out.println(colores.YELLOW+"La cantidad debe ser mayor que cero"+colores.RESET); System.out.println(" ");
+                    continue;}
+                    break;
+                }
 
         // movimiento 
+
         while (true) {
             System.out.println("Seleccione tipo de movimiento");
+            System.out.println("---------------------------");
             System.out.println("1. Entrada (sumar al stock)");
             System.out.println("2. Salida (restar del stock)");
+            System.out.println("---------------------------");
             System.out.print("Opción: ");
-          if (!getInfo.hasNextInt()) {
-                System.out.println("Debe ingresar un número entre 1 y 2"); System.out.println(" ");
-            getInfo.nextLine();
+            if (!getInfo.hasNextInt()) {
+                System.out.println(colores.YELLOW+"Debe ingresar un número entre 1 y 2"+colores.RESET);
+                System.out.println(" ");
+                getInfo.nextLine();
                 continue;}
-
-            tipo = getInfo.nextInt();
-            getInfo.nextLine();
-            if (tipo != 1 && tipo != 2) {
-                System.out.println("Opción invalida, debe ser 1 o 2"); System.out.println(" ");
-                continue;
-            } break;
-        }
-
-        si = service.registrarMovimiento(idP, cantidad, tipo);
-
-    if (si) {
-     System.out.println("Movimiento registrado exitosamente");
-     System.out.println(" ");     
-     System.out.println("\nVolviendo al menú principal...");
-    } else {
-   System.out.println("Error al registrar movimiento. Intente nuevamente.\n"); } }}}
-    
+                
+                tipo = getInfo.nextInt();
+                getInfo.nextLine();
+                if (tipo != 1 && tipo != 2) {
+                    System.out.println(colores.RED+"Opción invalida, debe ser 1 o 2"+colores.RESET); 
+                    System.out.println(" ");
+                    continue;
+                } break;
+            }
+            si = service.registrarMovimiento(idP, cantidad, tipo);
+            
+            if (si) {
+                System.out.println(colores.GREEN+"Movimiento registrado exitosamente"+colores.RESET);
+                System.out.println(" ");     
+                System.out.println(colores.CYAN+"\nVolviendo al menú principal..."+colores.RESET);
+            } else {
+                System.out.println(colores.RED+"Error al registrar movimiento. Intente nuevamente.\n"+colores.RESET); } }}}
+            
         
